@@ -62,7 +62,7 @@ class _HomeState extends State<Home> {
       'price': 3500,
       'category': 'Burger',
       'description': 'Juicy beef patty with fresh vegetables and special sauce',
-      'image': 'images/burger1.png',
+      'image': 'images/salad2.png',
       'isFavorite': false,
     },
     {
@@ -70,7 +70,7 @@ class _HomeState extends State<Home> {
       'price': 4200,
       'category': 'Pizza',
       'description': 'Classic pizza with tomato and fresh mozzarella cheese',
-      'image': 'images/pizza1.png',
+      'image': 'images/salad3.png',
       'isFavorite': false,
     },
     {
@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
       'price': 1800,
       'category': 'Ice Cream',
       'description': 'Creamy vanilla ice cream with chocolate toppings',
-      'image': 'images/icecream1.png',
+      'image': 'images/salad4.png',
       'isFavorite': false,
     },
     {
@@ -94,7 +94,7 @@ class _HomeState extends State<Home> {
       'price': 4500,
       'category': 'Pizza',
       'description': 'Smoky BBQ sauce with grilled chicken and red onions',
-      'image': 'images/pizza2.png',
+      'image': 'images/salad3.png',
       'isFavorite': false,
     },
     {
@@ -102,7 +102,7 @@ class _HomeState extends State<Home> {
       'price': 2200,
       'category': 'Ice Cream',
       'description': 'Vanilla ice cream with hot fudge and nuts',
-      'image': 'images/icecream2.png',
+      'image': 'images/salad2.png',
       'isFavorite': false,
     },
     {
@@ -110,7 +110,7 @@ class _HomeState extends State<Home> {
       'price': 3800,
       'category': 'Burger',
       'description': 'Beef patty with crispy bacon and melted cheese',
-      'image': 'images/burger2.png',
+      'image': 'images/salad4.png',
       'isFavorite': false,
     },
     {
@@ -118,7 +118,7 @@ class _HomeState extends State<Home> {
       'price': 3200,
       'category': 'Sushi',
       'description': 'Fresh crab with avocado and cucumber',
-      'image': 'images/sushi1.png',
+      'image': 'images/salad2.png',
       'isFavorite': false,
     },
     {
@@ -126,7 +126,7 @@ class _HomeState extends State<Home> {
       'price': 3100,
       'category': 'Pasta',
       'description': 'Creamy Caesar sauce with pasta and parmesan',
-      'image': 'images/pasta1.png',
+      'image': 'images/salad3.png',
       'isFavorite': false,
     },
     {
@@ -134,7 +134,7 @@ class _HomeState extends State<Home> {
       'price': 3400,
       'category': 'Sushi',
       'description': 'Spicy tuna with cucumber and sesame seeds',
-      'image': 'images/sushi2.png',
+      'image': 'images/salad2.png',
       'isFavorite': false,
     },
     {
@@ -142,7 +142,7 @@ class _HomeState extends State<Home> {
       'price': 3300,
       'category': 'Burger',
       'description': 'Plant-based patty with fresh vegetables',
-      'image': 'images/burger3.png',
+      'image': 'images/salad4.png',
       'isFavorite': false,
     },
     {
@@ -150,7 +150,7 @@ class _HomeState extends State<Home> {
       'price': 2000,
       'category': 'Ice Cream',
       'description': 'Creamy ice cream with chocolate chunks',
-      'image': 'images/icecream3.png',
+      'image': 'images/salad2.png',
       'isFavorite': false,
     },
   ];
@@ -424,7 +424,7 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Hello Yoramu 👋",
+                    "Good Evening 👋",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -964,9 +964,11 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildNavBarItem(Icons.home, 'Home', 0),
+            const SizedBox(width: 30),
             _buildNavBarItem(Icons.search, 'Search', 1),
-            const SizedBox(width: 40), // Space for the center FAB
+            const SizedBox(width: 70), // Space for the center FAB
             _buildNavBarItem(Icons.favorite, 'Favorites', 2),
+            const SizedBox(width: 30),
             _buildNavBarItem(Icons.person, 'Profile', 3),
           ],
         ),
