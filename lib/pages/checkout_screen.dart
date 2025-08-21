@@ -5,10 +5,10 @@ class CheckoutScreen extends StatefulWidget {
   final VoidCallback onOrderPlaced;
 
   const CheckoutScreen({
-    Key? key,
+    super.key,
     required this.cartItems,
     required this.onOrderPlaced,
-  }) : super(key: key);
+  });
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
