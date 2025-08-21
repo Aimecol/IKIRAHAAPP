@@ -197,7 +197,9 @@ class _HomeState extends State<Home> {
       MaterialPageRoute(
         builder: (context) => CategoryScreen(
           categoryName: categoryName,
-          products: popularItems.where((product) => product['category'] == categoryName).toList(),
+          products: popularItems
+              .where((product) => product['category'] == categoryName)
+              .toList(),
         ),
       ),
     );
@@ -219,7 +221,9 @@ class _HomeState extends State<Home> {
 
   void _addToCart(Map<String, dynamic> product, int quantity) {
     // Check if product already exists in cart
-    final existingIndex = cartItems.indexWhere((item) => item['name'] == product['name']);
+    final existingIndex = cartItems.indexWhere(
+      (item) => item['name'] == product['name'],
+    );
 
     if (existingIndex != -1) {
       setState(() {
@@ -227,10 +231,7 @@ class _HomeState extends State<Home> {
       });
     } else {
       setState(() {
-        cartItems.add({
-          ...product,
-          'quantity': quantity,
-        });
+        cartItems.add({...product, 'quantity': quantity});
       });
     }
 
@@ -246,14 +247,19 @@ class _HomeState extends State<Home> {
   void _toggleFavorite(int index, String section) {
     setState(() {
       if (section == 'featured') {
-        featuredProducts[index]['isFavorite'] = !(featuredProducts[index]['isFavorite'] ?? false);
+        featuredProducts[index]['isFavorite'] =
+            !(featuredProducts[index]['isFavorite'] ?? false);
       } else {
-        popularItems[index]['isFavorite'] = !(popularItems[index]['isFavorite'] ?? false);
+        popularItems[index]['isFavorite'] =
+            !(popularItems[index]['isFavorite'] ?? false);
         // Update filtered products as well
         final productName = popularItems[index]['name'];
-        final filteredIndex = filteredProducts.indexWhere((p) => p['name'] == productName);
+        final filteredIndex = filteredProducts.indexWhere(
+          (p) => p['name'] == productName,
+        );
         if (filteredIndex != -1) {
-          filteredProducts[filteredIndex]['isFavorite'] = popularItems[index]['isFavorite'];
+          filteredProducts[filteredIndex]['isFavorite'] =
+              popularItems[index]['isFavorite'];
         }
       }
     });
@@ -306,19 +312,30 @@ class _HomeState extends State<Home> {
         ),
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to cart screen
-          _showCartDialog();
-        },
-        backgroundColor: Colors.deepOrange,
-        child: const Icon(Icons.shopping_cart, color: Colors.white),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(top: 20),
+        child: SizedBox(
+          width: 50,
+          height: 50,
+          child: FloatingActionButton(
+            onPressed: () {
+              _showCartDialog();
+            },
+            backgroundColor: Colors.deepOrange,
+            child: const Icon(
+              Icons.shopping_cart,
+              color: Colors.white,
+              size: 20,
+            ), // adjust icon size too
+          ),
+        ),
       ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
-// Add this method to show the checkout dialog
+  // Add this method to show the checkout dialog
   void _showCheckoutDialog() {
     if (cartItems.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -345,12 +362,15 @@ class _HomeState extends State<Home> {
     );
   }
 
-// Update the cart dialog to include a checkout button
+  // Update the cart dialog to include a checkout button
   void _showCartDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        double total = cartItems.fold(0, (sum, item) => sum + (item['price'] * item['quantity']));
+        double total = cartItems.fold(
+          0,
+          (sum, item) => sum + (item['price'] * item['quantity']),
+        );
 
         return AlertDialog(
           title: const Text('Your Cart'),
@@ -359,36 +379,40 @@ class _HomeState extends State<Home> {
             child: cartItems.isEmpty
                 ? const Text('Your cart is empty')
                 : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: cartItems.length,
-                  itemBuilder: (context, index) {
-                    final item = cartItems[index];
-                    return ListTile(
-                      leading: Image.asset(
-                        item['image'] ?? 'images/salad2.png',
-                        width: 40,
-                        height: 40,
-                        fit: BoxFit.cover,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: cartItems.length,
+                        itemBuilder: (context, index) {
+                          final item = cartItems[index];
+                          return ListTile(
+                            leading: Image.asset(
+                              item['image'] ?? 'images/salad2.png',
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ),
+                            title: Text(item['name']),
+                            subtitle: Text(
+                              'Rwf ${item['price']} x ${item['quantity']}',
+                            ),
+                            trailing: Text(
+                              'Rwf ${item['price'] * item['quantity']}',
+                            ),
+                          );
+                        },
                       ),
-                      title: Text(item['name']),
-                      subtitle: Text('Rwf ${item['price']} x ${item['quantity']}'),
-                      trailing: Text('Rwf ${item['price'] * item['quantity']}'),
-                    );
-                  },
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Total: Rwf $total',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                      const SizedBox(height: 16),
+                      Text(
+                        'Total: Rwf $total',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
           ),
           actions: [
             TextButton(
@@ -513,10 +537,7 @@ class _HomeState extends State<Home> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.transparent,
-              Colors.black.withOpacity(0.7),
-            ],
+            colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
           ),
         ),
         child: Padding(
@@ -576,12 +597,14 @@ class _HomeState extends State<Home> {
                 bool isSelected = selectedCategory == category['name'];
                 return Container(
                   width: 90,
-                  margin: EdgeInsets.only(right: index == categories.length - 1 ? 0 : 12),
+                  margin: EdgeInsets.only(
+                    right: index == categories.length - 1 ? 0 : 12,
+                  ),
                   child: _buildCategoryButton(
                     category['name']!,
                     category['icon']!,
                     isSelected,
-                        () => _onCategoryTap(category['name']!),
+                    () => _onCategoryTap(category['name']!),
                   ),
                 );
               },
@@ -592,7 +615,12 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildCategoryButton(String name, String imagePath, bool isSelected, VoidCallback onTap) {
+  Widget _buildCategoryButton(
+    String name,
+    String imagePath,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -619,7 +647,9 @@ class _HomeState extends State<Home> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: isSelected ? Colors.white.withOpacity(0.2) : Colors.grey[100],
+                color: isSelected
+                    ? Colors.white.withOpacity(0.2)
+                    : Colors.grey[100],
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Image.asset(
@@ -684,11 +714,7 @@ class _HomeState extends State<Home> {
               itemCount: featuredProducts.length,
               itemBuilder: (context, index) {
                 final product = featuredProducts[index];
-                return _buildFoodCard(
-                  product,
-                  index,
-                  'featured',
-                );
+                return _buildFoodCard(product, index, 'featured');
               },
             ),
           ),
@@ -697,7 +723,11 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildFoodCard(Map<String, dynamic> product, int index, String section) {
+  Widget _buildFoodCard(
+    Map<String, dynamic> product,
+    int index,
+    String section,
+  ) {
     bool isFavorite = product['isFavorite'] ?? false;
 
     return GestureDetector(
@@ -730,7 +760,9 @@ class _HomeState extends State<Home> {
                       topRight: Radius.circular(24),
                     ),
                     image: DecorationImage(
-                      image: AssetImage(product['image'] ?? 'images/salad2.png'),
+                      image: AssetImage(
+                        product['image'] ?? 'images/salad2.png',
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -794,7 +826,11 @@ class _HomeState extends State<Home> {
                         ),
                         child: IconButton(
                           onPressed: () => _onProductTap(product),
-                          icon: const Icon(Icons.add, color: Colors.white, size: 20),
+                          icon: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 20,
+                          ),
                           padding: const EdgeInsets.all(8),
                           constraints: const BoxConstraints(),
                         ),
@@ -854,7 +890,9 @@ class _HomeState extends State<Home> {
             itemBuilder: (context, index) {
               final product = filteredProducts[index];
               bool isFavorite = product['isFavorite'] ?? false;
-              final originalIndex = popularItems.indexWhere((p) => p['name'] == product['name']);
+              final originalIndex = popularItems.indexWhere(
+                (p) => p['name'] == product['name'],
+              );
 
               return GestureDetector(
                 onTap: () => _onProductTap(product),
@@ -884,7 +922,9 @@ class _HomeState extends State<Home> {
                                 topRight: Radius.circular(16),
                               ),
                               image: DecorationImage(
-                                image: AssetImage(product['image'] ?? 'images/salad2.png'),
+                                image: AssetImage(
+                                  product['image'] ?? 'images/salad2.png',
+                                ),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -893,9 +933,12 @@ class _HomeState extends State<Home> {
                             top: 4,
                             right: 4,
                             child: IconButton(
-                              onPressed: () => _toggleFavorite(originalIndex, 'popular'),
+                              onPressed: () =>
+                                  _toggleFavorite(originalIndex, 'popular'),
                               icon: Icon(
-                                isFavorite ? Icons.favorite : Icons.favorite_border,
+                                isFavorite
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
                                 color: isFavorite ? Colors.red : Colors.white,
                                 size: 20,
                               ),
@@ -955,18 +998,21 @@ class _HomeState extends State<Home> {
 
   Widget _buildBottomNavigationBar() {
     return BottomAppBar(
+      // 👈 Background Color of BottomNavigationBar
+      color: const Color.fromARGB(37, 71, 68, 68),
       shape: const CircularNotchedRectangle(),
-      notchMargin: 8.0,
+      notchMargin: 16.0,
       child: Container(
         height: 70,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            const SizedBox(width: 12),
             _buildNavBarItem(Icons.home, 'Home', 0),
             const SizedBox(width: 30),
             _buildNavBarItem(Icons.search, 'Search', 1),
-            const SizedBox(width: 70), // Space for the center FAB
+            const SizedBox(width: 64), // Space for the center FAB
             _buildNavBarItem(Icons.favorite, 'Favorites', 2),
             const SizedBox(width: 30),
             _buildNavBarItem(Icons.person, 'Profile', 3),
@@ -988,14 +1034,18 @@ class _HomeState extends State<Home> {
         children: [
           Icon(
             icon,
-            color: _currentBottomNavIndex == index ? Colors.deepOrange : Colors.grey,
+            color: _currentBottomNavIndex == index
+                ? Colors.deepOrange
+                : Colors.grey,
             size: 28,
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              color: _currentBottomNavIndex == index ? Colors.deepOrange : Colors.grey,
+              color: _currentBottomNavIndex == index
+                  ? Colors.deepOrange
+                  : Colors.grey,
               fontSize: 12,
             ),
           ),
