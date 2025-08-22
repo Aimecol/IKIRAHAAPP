@@ -19,7 +19,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _additionalPhoneController = TextEditingController();
+  final TextEditingController _additionalPhoneController =
+      TextEditingController();
 
   String _selectedPaymentMethod = 'MTN Rwanda';
   String _selectedAddressType = 'Home';
@@ -36,7 +37,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   double get totalAmount {
-    return widget.cartItems.fold(0, (sum, item) => sum + (item['price'] * item['quantity']));
+    return widget.cartItems.fold(
+      0,
+      (sum, item) => sum + (item['price'] * item['quantity']),
+    );
   }
 
   void _placeOrder() {
@@ -47,7 +51,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Order Confirmation'),
-            content: Text('Your order of Rwf $totalAmount has been placed successfully with $_selectedPaymentMethod.'),
+            content: Text(
+              'Your order of Rwf $totalAmount has been placed successfully with $_selectedPaymentMethod.',
+            ),
             actions: [
               TextButton(
                 onPressed: () {
@@ -88,10 +94,43 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: const Text('Checkout'),
-        backgroundColor: Colors.deepOrange,
-        foregroundColor: Colors.white,
+        title: const Text(
+          'Checkout',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            letterSpacing: -0.3,
+            color: Colors.black87,
+          ),
+        ),
+        backgroundColor: const Color(0xFFF8F9FA),
+        foregroundColor: Colors.black87,
+        elevation: 0,
+        centerTitle: true,
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.9),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              size: 18,
+              color: Colors.black87,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -114,16 +153,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      ...widget.cartItems.map((item) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('${item['name']} x${item['quantity']}'),
-                            Text('Rwf ${item['price'] * item['quantity']}'),
-                          ],
+                      ...widget.cartItems.map(
+                        (item) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('${item['name']} x${item['quantity']}'),
+                              Text('Rwf ${item['price'] * item['quantity']}'),
+                            ],
+                          ),
                         ),
-                      )),
+                      ),
                       const Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,22 +208,86 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      DropdownButtonFormField<String>(
-                        value: _selectedPaymentMethod,
-                        items: ['MTN Rwanda', 'Airtel Rwanda'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {
-                          setState(() {
-                            _selectedPaymentMethod = newValue!;
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'Select Payment Method',
-                          border: OutlineInputBorder(),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.grey.withValues(alpha: 0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: DropdownButtonFormField<String>(
+                          value: _selectedPaymentMethod,
+                          items: [
+                            DropdownMenuItem<String>(
+                              value: 'MTN Rwanda',
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 24,
+                                    height: 24,
+                                    decoration: BoxDecoration(
+                                      color: Colors.yellow[700],
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'M',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const Text('MTN Rwanda'),
+                                ],
+                              ),
+                            ),
+                            DropdownMenuItem<String>(
+                              value: 'Airtel Rwanda',
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 24,
+                                    height: 24,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'A',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const Text('Airtel Rwanda'),
+                                ],
+                              ),
+                            ),
+                          ],
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedPaymentMethod = newValue!;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Select Payment Method',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -278,18 +383,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                       // Additional Addresses
                       if (_additionalAddresses.isNotEmpty) ...[
-                        ..._additionalAddresses.map((address) => ListTile(
-                          title: Text('${address['type']}: ${address['address']}'),
-                          subtitle: Text(address['phone']!.isNotEmpty ? 'Phone: ${address['phone']}' : ''),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              setState(() {
-                                _additionalAddresses.remove(address);
-                              });
-                            },
+                        ..._additionalAddresses.map(
+                          (address) => ListTile(
+                            title: Text(
+                              '${address['type']}: ${address['address']}',
+                            ),
+                            subtitle: Text(
+                              address['phone']!.isNotEmpty
+                                  ? 'Phone: ${address['phone']}'
+                                  : '',
+                            ),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                setState(() {
+                                  _additionalAddresses.remove(address);
+                                });
+                              },
+                            ),
                           ),
-                        )),
+                        ),
                         const Divider(),
                       ],
 
@@ -326,7 +439,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           controller: _additionalPhoneController,
                           keyboardType: TextInputType.phone,
                           decoration: const InputDecoration(
-                            labelText: 'Phone Number for this address (optional)',
+                            labelText:
+                                'Phone Number for this address (optional)',
                             border: OutlineInputBorder(),
                             prefixText: '+250 ',
                           ),
@@ -357,7 +471,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         decoration: const InputDecoration(
                           labelText: 'Primary Delivery Address',
                           border: OutlineInputBorder(),
-                          hintText: 'Enter your complete address (street, cell, village, etc.)',
+                          hintText:
+                              'Enter your complete address (street, cell, village, etc.)',
                         ),
                         maxLines: 2,
                         validator: (value) {
