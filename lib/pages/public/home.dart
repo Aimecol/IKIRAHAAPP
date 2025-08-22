@@ -1071,21 +1071,30 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   ),
                 ),
                 Positioned(
-                  top: 8,
-                  right: 8,
+                  top: 6,
+                  right: 6,
                   child: Container(
+                    width: 32,
+                    height: 32,
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.9),
                       shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: IconButton(
                       onPressed: () => _toggleFavorite(index, section),
                       icon: Icon(
                         isFavorite ? Icons.favorite : Icons.favorite_border,
                         color: isFavorite ? Colors.red : Colors.grey[600],
-                        size: 20,
+                        size: 16,
                       ),
-                      padding: const EdgeInsets.all(4),
+                      padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
                   ),
@@ -1097,6 +1106,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       product['name'] ?? 'Product Name',
@@ -1110,21 +1120,20 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    Expanded(
-                      child: Text(
-                        product['description'] ?? 'Product description',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey[600],
-                          fontFamily: 'Roboto',
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                    Text(
+                      product['description'] ?? 'Product description',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey[600],
+                        fontFamily: 'Roboto',
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 8),
+                    const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           child: Text(
@@ -1138,18 +1147,27 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           ),
                         ),
                         Container(
+                          width: 28,
+                          height: 28,
                           decoration: BoxDecoration(
                             color: Colors.deepOrange,
-                            borderRadius: BorderRadius.circular(10),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.deepOrange.withValues(alpha: 0.3),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
                           child: IconButton(
                             onPressed: () => _addToCart(product, 1),
                             icon: const Icon(
                               Icons.add,
                               color: Colors.white,
-                              size: 18,
+                              size: 14,
                             ),
-                            padding: const EdgeInsets.all(6),
+                            padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
                           ),
                         ),
@@ -1250,12 +1268,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             ),
                           ),
                           Positioned(
-                            top: 4,
-                            right: 4,
+                            top: 6,
+                            right: 6,
                             child: Container(
+                              width: 32,
+                              height: 32,
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.9),
                                 shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.1),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
                               ),
                               child: IconButton(
                                 onPressed: () =>
@@ -1267,9 +1294,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   color: isFavorite
                                       ? Colors.red
                                       : Colors.grey[600],
-                                  size: 18,
+                                  size: 16,
                                 ),
-                                padding: const EdgeInsets.all(4),
+                                padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(),
                               ),
                             ),
@@ -1319,18 +1346,29 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     ),
                                   ),
                                   Container(
+                                    width: 28,
+                                    height: 28,
                                     decoration: BoxDecoration(
                                       color: Colors.deepOrange,
-                                      borderRadius: BorderRadius.circular(8),
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.deepOrange.withValues(
+                                            alpha: 0.3,
+                                          ),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
                                     ),
                                     child: IconButton(
                                       onPressed: () => _addToCart(product, 1),
                                       icon: const Icon(
                                         Icons.add,
                                         color: Colors.white,
-                                        size: 16,
+                                        size: 14,
                                       ),
-                                      padding: const EdgeInsets.all(4),
+                                      padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(),
                                     ),
                                   ),
@@ -1353,24 +1391,32 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Widget _buildBottomNavigationBar() {
-    return SizedBox(
-      height: 65, // 👈 Reduced height
-      child: BottomAppBar(
+    return Container(
+      height: 70,
+      decoration: BoxDecoration(
         color: const Color.fromARGB(37, 71, 68, 68),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: BottomAppBar(
+        color: Colors.transparent,
+        elevation: 0,
         shape: const CircularNotchedRectangle(),
-        notchMargin: 16.0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            const SizedBox(width: 12),
-            _buildNavBarItem(Icons.home, 'Home', 0),
-            const SizedBox(width: 30),
-            _buildNavBarItem(Icons.search, 'Search', 1),
-            const SizedBox(width: 64), // Space for the center FAB
-            _buildNavBarItem(Icons.favorite, 'Favorites', 2),
-            const SizedBox(width: 30),
-            _buildNavBarItem(Icons.menu, 'Menu', 3),
-          ],
+        notchMargin: 8.0,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavBarItem(Icons.home, 'Home', 0),
+              _buildNavBarItem(Icons.search, 'Search', 1),
+              const SizedBox(width: 40), // Space for the center FAB
+              _buildNavBarItem(Icons.favorite, 'Favorites', 2),
+              _buildNavBarItem(Icons.menu, 'Menu', 3),
+            ],
+          ),
         ),
       ),
     );
@@ -1411,27 +1457,31 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             break;
         }
       },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: _currentBottomNavIndex == index
-                ? Colors.deepOrange
-                : Colors.grey,
-            size: 28,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
               color: _currentBottomNavIndex == index
                   ? Colors.deepOrange
                   : Colors.grey,
-              fontSize: 12,
+              size: 24,
             ),
-          ),
-        ],
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(
+                color: _currentBottomNavIndex == index
+                    ? Colors.deepOrange
+                    : Colors.grey,
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

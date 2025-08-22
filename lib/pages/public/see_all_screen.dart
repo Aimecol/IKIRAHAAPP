@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ikirahaapp/pages/public/product_details_screen.dart';
+import 'package:ikirahaapp/pages/public/restaurant_detail_screen.dart';
 
 class SeeAllScreen extends StatefulWidget {
   final String title;
@@ -47,10 +48,16 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
           if (widget.itemType == 'products') {
             return item['name'].toString().toLowerCase().contains(query) ||
                 item['category'].toString().toLowerCase().contains(query) ||
-                (item['description']?.toString().toLowerCase().contains(query) ?? false);
+                (item['description']?.toString().toLowerCase().contains(
+                      query,
+                    ) ??
+                    false);
           } else if (widget.itemType == 'restaurants') {
             return item['name'].toString().toLowerCase().contains(query) ||
-                (item['description']?.toString().toLowerCase().contains(query) ?? false);
+                (item['description']?.toString().toLowerCase().contains(
+                      query,
+                    ) ??
+                    false);
           }
           return false;
         }).toList();
@@ -79,7 +86,12 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
       );
     } else if (widget.itemType == 'restaurants') {
       // Navigate to restaurant detail page
-      // This would be implemented when restaurant detail page is ready
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RestaurantDetailScreen(restaurant: item),
+        ),
+      );
     }
   }
 
@@ -91,10 +103,10 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
         (item) => item['name'] == itemName,
       );
       if (originalIndex != -1) {
-        widget.items[originalIndex]['isFavorite'] = 
+        widget.items[originalIndex]['isFavorite'] =
             !(widget.items[originalIndex]['isFavorite'] ?? false);
         // Update the filtered item as well
-        filteredItems[index]['isFavorite'] = 
+        filteredItems[index]['isFavorite'] =
             widget.items[originalIndex]['isFavorite'];
       }
     });
@@ -166,15 +178,12 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
                       _searchController.text.isEmpty
                           ? 'No items found'
                           : 'No items match your search',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                     ),
                   )
                 : widget.itemType == 'restaurants'
-                    ? _buildRestaurantsList()
-                    : _buildProductsGrid(),
+                ? _buildRestaurantsList()
+                : _buildProductsGrid(),
           ),
         ],
       ),

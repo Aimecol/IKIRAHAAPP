@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ikirahaapp/pages/public/product_details_screen.dart';
 import 'package:ikirahaapp/pages/public/category_screen.dart';
+import 'package:ikirahaapp/pages/public/cart_screen.dart';
 
 class RestaurantDetailScreen extends StatefulWidget {
   final Map<String, dynamic> restaurant;
@@ -264,7 +265,19 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
           height: 50,
           child: FloatingActionButton(
             onPressed: () {
-              _showCartDialog();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartScreen(
+                    cartItems: cartItems,
+                    onCartUpdated: (updatedCart) {
+                      setState(() {
+                        cartItems = updatedCart;
+                      });
+                    },
+                  ),
+                ),
+              );
             },
             backgroundColor: Colors.deepOrange,
             child: const Icon(
@@ -764,78 +777,6 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
           ),
         ],
       ),
-    );
-  }
-
-  void _showCartDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        double total = cartItems.fold(
-          0,
-          (sum, item) => sum + (item['price'] * item['quantity']),
-        );
-
-        return AlertDialog(
-          title: const Text('Your Cart'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: cartItems.isEmpty
-                ? const Text('Your cart is empty')
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: cartItems.length,
-                        itemBuilder: (context, index) {
-                          final item = cartItems[index];
-                          return ListTile(
-                            leading: Image.asset(
-                              item['image'] ?? 'images/salad2.png',
-                              width: 40,
-                              height: 40,
-                              fit: BoxFit.cover,
-                            ),
-                            title: Text(item['name']),
-                            subtitle: Text(
-                              'Rwf ${item['price']} x ${item['quantity']}',
-                            ),
-                            trailing: Text(
-                              'Rwf ${item['price'] * item['quantity']}',
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Total: Rwf $total',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Continue Shopping'),
-            ),
-            if (cartItems.isNotEmpty)
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  // Navigate to checkout
-                },
-                child: const Text('Checkout'),
-              ),
-          ],
-        );
-      },
     );
   }
 }
