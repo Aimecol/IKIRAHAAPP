@@ -225,12 +225,24 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: Text(widget.restaurant['name']),
-        backgroundColor: Colors.deepOrange,
-        foregroundColor: Colors.white,
+        title: Text(
+          widget.restaurant['name'],
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            letterSpacing: -0.3,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
         elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -259,32 +271,80 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
         ),
       ),
       floatingActionButton: Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: SizedBox(
-          width: 50,
-          height: 50,
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CartScreen(
-                    cartItems: cartItems,
-                    onCartUpdated: (updatedCart) {
-                      setState(() {
-                        cartItems = updatedCart;
-                      });
-                    },
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: const LinearGradient(
+            colors: [Colors.deepOrange, Colors.orange],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.deepOrange.withValues(alpha: 0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CartScreen(
+                  cartItems: cartItems,
+                  onCartUpdated: (updatedCart) {
+                    setState(() {
+                      cartItems = updatedCart;
+                    });
+                  },
+                ),
+              ),
+            );
+          },
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              const Icon(
+                Icons.shopping_bag_outlined,
+                color: Colors.white,
+                size: 24,
+              ),
+              if (cartItems.isNotEmpty)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      cartItems.length.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-              );
-            },
-            backgroundColor: Colors.deepOrange,
-            child: const Icon(
-              Icons.shopping_cart,
-              color: Colors.white,
-              size: 20,
-            ),
+            ],
           ),
         ),
       ),
