@@ -692,7 +692,7 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Featured Products",
+                "Today's Trends",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -862,7 +862,7 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Popular Items",
+                "All Items",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
