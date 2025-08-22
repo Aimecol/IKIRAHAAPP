@@ -23,8 +23,8 @@ class _HomeState extends State<Home> {
     {'name': 'Pizza', 'icon': 'images/pizza.png'},
     {'name': 'Salad', 'icon': 'images/salad.png'},
     {'name': 'Burger', 'icon': 'images/burger.png'},
-    {'name': 'Sushi', 'icon': 'images/sushi.png'},
-    {'name': 'Pasta', 'icon': 'images/pasta.png'},
+    {'name': 'Sushi', 'icon': 'images/salad.png'},
+    {'name': 'Pasta', 'icon': 'images/pizza.png'},
   ];
 
   // Product data with images
@@ -437,7 +437,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildHeaderSection() {
     return Container(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -450,7 +450,7 @@ class _HomeState extends State<Home> {
                   Text(
                     "Good Evening 👋",
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 25,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Poppins',
                       color: Colors.grey[800],
@@ -459,7 +459,7 @@ class _HomeState extends State<Home> {
                   Text(
                     "What would you like to eat?",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.grey[600],
                       fontFamily: 'Roboto',
                     ),
@@ -475,8 +475,8 @@ class _HomeState extends State<Home> {
 
   Widget _buildSearchBar() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24.0),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -500,7 +500,7 @@ class _HomeState extends State<Home> {
                 hintText: 'Search for food...',
                 hintStyle: TextStyle(
                   color: Colors.grey[500],
-                  fontSize: 16,
+                  fontSize: 14,
                   fontFamily: 'Roboto',
                 ),
                 border: InputBorder.none,
@@ -514,12 +514,14 @@ class _HomeState extends State<Home> {
 
   Widget _buildBanner() {
     return Container(
-      margin: const EdgeInsets.all(24.0),
-      height: 160,
+      margin: const EdgeInsets.all(14.0),
+      height: 120,
+      width: 500,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(6),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.deepOrange.withOpacity(0.3),
             spreadRadius: 1,
             blurRadius: 15,
@@ -533,10 +535,11 @@ class _HomeState extends State<Home> {
       ),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(6),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
+            // ignore: deprecated_member_use
             colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
           ),
         ),
@@ -573,22 +576,22 @@ class _HomeState extends State<Home> {
 
   Widget _buildCategoriesSection() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "Food Categories",
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               fontFamily: 'Poppins',
               color: Colors.grey[800],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 10),
           SizedBox(
-            height: 100,
+            height: 81,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: categories.length,
@@ -632,7 +635,9 @@ class _HomeState extends State<Home> {
           boxShadow: [
             BoxShadow(
               color: isSelected
+                  // ignore: deprecated_member_use
                   ? Colors.deepOrange.withOpacity(0.3)
+                  // ignore: deprecated_member_use
                   : Colors.grey.withOpacity(0.1),
               spreadRadius: 1,
               blurRadius: isSelected ? 10 : 5,
@@ -648,6 +653,7 @@ class _HomeState extends State<Home> {
               height: 40,
               decoration: BoxDecoration(
                 color: isSelected
+                    // ignore: deprecated_member_use
                     ? Colors.white.withOpacity(0.2)
                     : Colors.grey[100],
                 borderRadius: BorderRadius.circular(15),
@@ -678,7 +684,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildFeaturedProductsSection() {
     return Container(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(14.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -688,7 +694,7 @@ class _HomeState extends State<Home> {
               Text(
                 "Featured Products",
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Poppins',
                   color: Colors.grey[800],
@@ -706,9 +712,8 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
           SizedBox(
-            height: 280,
+            height: 318,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: featuredProducts.length,
@@ -740,6 +745,7 @@ class _HomeState extends State<Home> {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
+              // ignore: deprecated_member_use
               color: Colors.grey.withOpacity(0.1),
               spreadRadius: 1,
               blurRadius: 15,
@@ -789,7 +795,7 @@ class _HomeState extends State<Home> {
                   Text(
                     product['name'] ?? 'Product Name',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Poppins',
                       color: Colors.grey[800],
@@ -813,7 +819,7 @@ class _HomeState extends State<Home> {
                       Text(
                         'Rwf ${product['price']?.toString() ?? '0'}',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: Colors.deepOrange,
                           fontFamily: 'Poppins',
@@ -848,7 +854,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildPopularItemsSection() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -858,7 +864,7 @@ class _HomeState extends State<Home> {
               Text(
                 "Popular Items",
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Poppins',
                   color: Colors.grey[800],
@@ -902,6 +908,7 @@ class _HomeState extends State<Home> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
+                        // ignore: deprecated_member_use
                         color: Colors.grey.withOpacity(0.1),
                         spreadRadius: 1,
                         blurRadius: 10,
@@ -954,7 +961,7 @@ class _HomeState extends State<Home> {
                             Text(
                               product['name'] ?? 'Product Name',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 15,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Poppins',
                                 color: Colors.grey[800],
@@ -997,14 +1004,12 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildBottomNavigationBar() {
-    return BottomAppBar(
-      // 👈 Background Color of BottomNavigationBar
-      color: const Color.fromARGB(37, 71, 68, 68),
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 16.0,
-      child: Container(
-        height: 70,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+    return SizedBox(
+      height: 65, // 👈 Reduced height
+      child: BottomAppBar(
+        color: const Color.fromARGB(37, 71, 68, 68),
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 16.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -1015,7 +1020,7 @@ class _HomeState extends State<Home> {
             const SizedBox(width: 64), // Space for the center FAB
             _buildNavBarItem(Icons.favorite, 'Favorites', 2),
             const SizedBox(width: 30),
-            _buildNavBarItem(Icons.person, 'Profile', 3),
+            _buildNavBarItem(Icons.menu, 'Menu', 3),
           ],
         ),
       ),
