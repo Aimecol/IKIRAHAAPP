@@ -40,7 +40,7 @@ class _CartScreenState extends State<CartScreen> {
       cartItems.removeAt(index);
     });
     widget.onCartUpdated(cartItems);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Item removed from cart'),
@@ -55,7 +55,9 @@ class _CartScreenState extends State<CartScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Clear Cart'),
-          content: const Text('Are you sure you want to remove all items from your cart?'),
+          content: const Text(
+            'Are you sure you want to remove all items from your cart?',
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -124,18 +126,41 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: const Text('Your Cart'),
-        backgroundColor: Colors.deepOrange,
-        foregroundColor: Colors.white,
+        title: const Text(
+          'Your Cart',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            letterSpacing: -0.3,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
         elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
         actions: [
           if (cartItems.isNotEmpty)
-            IconButton(
-              onPressed: _clearCart,
-              icon: const Icon(Icons.delete_outline),
-              tooltip: 'Clear Cart',
+            Container(
+              margin: const EdgeInsets.only(right: 8),
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                onPressed: _clearCart,
+                icon: const Icon(
+                  Icons.delete_outline,
+                  color: Colors.red,
+                  size: 20,
+                ),
+                tooltip: 'Clear Cart',
+              ),
             ),
         ],
       ),
@@ -201,10 +226,7 @@ class _CartScreenState extends State<CartScreen> {
             ),
             child: const Text(
               'Start Shopping',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -290,7 +312,8 @@ class _CartScreenState extends State<CartScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: IconButton(
-                        onPressed: () => _updateQuantity(index, item['quantity'] - 1),
+                        onPressed: () =>
+                            _updateQuantity(index, item['quantity'] - 1),
                         icon: const Icon(Icons.remove, size: 18),
                         padding: const EdgeInsets.all(4),
                         constraints: const BoxConstraints(),
@@ -313,8 +336,13 @@ class _CartScreenState extends State<CartScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: IconButton(
-                        onPressed: () => _updateQuantity(index, item['quantity'] + 1),
-                        icon: const Icon(Icons.add, size: 18, color: Colors.white),
+                        onPressed: () =>
+                            _updateQuantity(index, item['quantity'] + 1),
+                        icon: const Icon(
+                          Icons.add,
+                          size: 18,
+                          color: Colors.white,
+                        ),
                         padding: const EdgeInsets.all(4),
                         constraints: const BoxConstraints(),
                       ),
@@ -326,10 +354,7 @@ class _CartScreenState extends State<CartScreen> {
                   onPressed: () => _removeItem(index),
                   child: Text(
                     'Remove',
-                    style: TextStyle(
-                      color: Colors.red[600],
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.red[600], fontSize: 12),
                   ),
                 ),
               ],
@@ -397,10 +422,7 @@ class _CartScreenState extends State<CartScreen> {
               ),
               child: const Text(
                 'Proceed to Checkout',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ),
