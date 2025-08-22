@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:ikirahaapp/pages/public/product_details_screen.dart';
 import 'package:ikirahaapp/pages/public/category_screen.dart';
 import 'package:ikirahaapp/pages/public/checkout_screen.dart';
+import 'package:ikirahaapp/pages/public/restaurant_detail_screen.dart';
+import 'package:ikirahaapp/pages/public/see_all_screen.dart';
+import 'package:ikirahaapp/pages/public/cart_screen.dart';
+import 'package:ikirahaapp/pages/public/profile_screen.dart';
+import 'package:ikirahaapp/pages/public/search_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,12 +15,18 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
   String selectedCategory = '';
   int _currentBottomNavIndex = 0;
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> filteredProducts = [];
   List<Map<String, dynamic>> cartItems = [];
+
+  // Banner related variables
+  PageController _bannerPageController = PageController();
+  int _currentBannerIndex = 0;
+  late AnimationController _bannerAnimationController;
+  late Animation<double> _bannerAnimation;
 
   // Category data with navigation functionality
   final List<Map<String, String>> categories = [
@@ -25,6 +36,94 @@ class _HomeState extends State<Home> {
     {'name': 'Burger', 'icon': 'images/burger.png'},
     {'name': 'Sushi', 'icon': 'images/salad.png'},
     {'name': 'Pasta', 'icon': 'images/pizza.png'},
+  ];
+
+  // Banner data for multiple banners
+  final List<Map<String, String>> banners = [
+    {
+      'image': 'images/food.jpg',
+      'title': 'Special Offer!',
+      'subtitle': 'Get 20% off on all salads this week',
+    },
+    {
+      'image': 'images/burger.png',
+      'title': 'New Burgers!',
+      'subtitle': 'Try our delicious new burger collection',
+    },
+    {
+      'image': 'images/pizza.png',
+      'title': 'Pizza Party!',
+      'subtitle': 'Buy 2 pizzas and get 1 free today only',
+    },
+    {
+      'image': 'images/ice-cream.png',
+      'title': 'Sweet Treats!',
+      'subtitle': 'Cool down with our premium ice cream',
+    },
+  ];
+
+  // Restaurant data
+  final List<Map<String, dynamic>> restaurants = [
+    {
+      'id': 1,
+      'name': 'Avuma Restaurant',
+      'image': 'images/avuma-restaurant.jpg',
+      'rating': 4.5,
+      'deliveryTime': '25-30 min',
+      'deliveryFee': 500,
+      'categories': ['Pizza', 'Burger', 'Salad'],
+      'description': 'Delicious Italian and American cuisine',
+    },
+    {
+      'id': 2,
+      'name': 'Blessing Restaurant',
+      'image': 'images/blessing-restaurant.jpg',
+      'rating': 4.3,
+      'deliveryTime': '20-25 min',
+      'deliveryFee': 300,
+      'categories': ['Sushi', 'Pasta', 'Salad'],
+      'description': 'Fresh sushi and Asian fusion',
+    },
+    {
+      'id': 3,
+      'name': 'Glass Restaurant',
+      'image': 'images/glass-restaurant.jpg',
+      'rating': 4.7,
+      'deliveryTime': '30-35 min',
+      'deliveryFee': 700,
+      'categories': ['Ice Cream', 'Burger', 'Pizza'],
+      'description': 'Premium dining experience',
+    },
+    {
+      'id': 4,
+      'name': 'Ice Restaurant',
+      'image': 'images/ice-restaurant.jpg',
+      'rating': 4.2,
+      'deliveryTime': '15-20 min',
+      'deliveryFee': 200,
+      'categories': ['Ice Cream', 'Salad'],
+      'description': 'Cool treats and healthy options',
+    },
+    {
+      'id': 5,
+      'name': 'Ikigugu Restaurant',
+      'image': 'images/ikigugu-restaurant.jpg',
+      'rating': 4.6,
+      'deliveryTime': '25-30 min',
+      'deliveryFee': 400,
+      'categories': ['Pasta', 'Pizza', 'Burger'],
+      'description': 'Traditional and modern cuisine',
+    },
+    {
+      'id': 6,
+      'name': 'Peace Restaurant',
+      'image': 'images/peace-restaurant.webp',
+      'rating': 4.4,
+      'deliveryTime': '20-25 min',
+      'deliveryFee': 350,
+      'categories': ['Sushi', 'Salad', 'Ice Cream'],
+      'description': 'Peaceful dining with great food',
+    },
   ];
 
   // Product data with images
@@ -160,13 +259,47 @@ class _HomeState extends State<Home> {
     super.initState();
     filteredProducts = List.from(popularItems);
     _searchController.addListener(_onSearchChanged);
+
+    // Initialize banner animation
+    _bannerAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _bannerAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _bannerAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    // Start banner auto-sliding
+    _startBannerAutoSlide();
+    _bannerAnimationController.forward();
   }
 
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
+    _bannerPageController.dispose();
+    _bannerAnimationController.dispose();
     super.dispose();
+  }
+
+  void _startBannerAutoSlide() {
+    Future.delayed(const Duration(seconds: 4), () {
+      if (mounted) {
+        setState(() {
+          _currentBannerIndex = (_currentBannerIndex + 1) % banners.length;
+        });
+        _bannerPageController.animateToPage(
+          _currentBannerIndex,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+        _startBannerAutoSlide(); // Continue the cycle
+      }
+    });
   }
 
   void _onSearchChanged() {
@@ -266,13 +399,13 @@ class _HomeState extends State<Home> {
   }
 
   void _viewAllPopularItems() {
-    // Navigate to a screen showing all popular items
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CategoryScreen(
-          categoryName: 'All Popular Items',
-          products: List.from(popularItems),
+        builder: (context) => SeeAllScreen(
+          title: 'All Popular Items',
+          items: popularItems,
+          itemType: 'products',
         ),
       ),
     );
@@ -299,6 +432,9 @@ class _HomeState extends State<Home> {
               // Categories Section
               _buildCategoriesSection(),
 
+              // Restaurants Section
+              _buildRestaurantsSection(),
+
               // Featured Products Section
               _buildFeaturedProductsSection(),
 
@@ -319,7 +455,19 @@ class _HomeState extends State<Home> {
           height: 50,
           child: FloatingActionButton(
             onPressed: () {
-              _showCartDialog();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartScreen(
+                    cartItems: cartItems,
+                    onCartUpdated: (updatedCart) {
+                      setState(() {
+                        cartItems = updatedCart;
+                      });
+                    },
+                  ),
+                ),
+              );
             },
             backgroundColor: Colors.deepOrange,
             child: const Icon(
@@ -335,104 +483,17 @@ class _HomeState extends State<Home> {
     );
   }
 
-  // Add this method to show the checkout dialog
-  void _showCheckoutDialog() {
-    if (cartItems.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Your cart is empty. Add some items first!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) {
+      return "Good Morning 🌅";
+    } else if (hour >= 12 && hour < 17) {
+      return "Good Afternoon ☀️";
+    } else if (hour >= 17 && hour < 21) {
+      return "Good Evening 🌆";
+    } else {
+      return "Good Night 🌙";
     }
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CheckoutScreen(
-          cartItems: cartItems,
-          onOrderPlaced: () {
-            setState(() {
-              cartItems.clear();
-            });
-          },
-        ),
-      ),
-    );
-  }
-
-  // Update the cart dialog to include a checkout button
-  void _showCartDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        double total = cartItems.fold(
-          0,
-          (sum, item) => sum + (item['price'] * item['quantity']),
-        );
-
-        return AlertDialog(
-          title: const Text('Your Cart'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: cartItems.isEmpty
-                ? const Text('Your cart is empty')
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: cartItems.length,
-                        itemBuilder: (context, index) {
-                          final item = cartItems[index];
-                          return ListTile(
-                            leading: Image.asset(
-                              item['image'] ?? 'images/salad2.png',
-                              width: 40,
-                              height: 40,
-                              fit: BoxFit.cover,
-                            ),
-                            title: Text(item['name']),
-                            subtitle: Text(
-                              'Rwf ${item['price']} x ${item['quantity']}',
-                            ),
-                            trailing: Text(
-                              'Rwf ${item['price'] * item['quantity']}',
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Total: Rwf $total',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Continue Shopping'),
-            ),
-            if (cartItems.isNotEmpty)
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _showCheckoutDialog();
-                },
-                child: const Text('Checkout'),
-              ),
-          ],
-        );
-      },
-    );
   }
 
   Widget _buildHeaderSection() {
@@ -448,7 +509,7 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Good Evening 👋",
+                    _getGreeting(),
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -474,40 +535,47 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildSearchBar() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                SearchScreen(products: popularItems, restaurants: restaurants),
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.search, color: Colors.grey[400]),
-          const SizedBox(width: 12),
-          Expanded(
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search for food...',
-                hintStyle: TextStyle(
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.1),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.search, color: Colors.grey[400]),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Search for food...',
+                style: TextStyle(
                   color: Colors.grey[500],
                   fontSize: 14,
                   fontFamily: 'Roboto',
                 ),
-                border: InputBorder.none,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -515,61 +583,108 @@ class _HomeState extends State<Home> {
   Widget _buildBanner() {
     return Container(
       margin: const EdgeInsets.all(14.0),
-      height: 120,
-      width: 500,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(6),
-        boxShadow: [
-          BoxShadow(
-            // ignore: deprecated_member_use
-            color: Colors.deepOrange.withOpacity(0.3),
-            spreadRadius: 1,
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+      height: 140,
+      child: Column(
+        children: [
+          Expanded(
+            child: PageView.builder(
+              controller: _bannerPageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentBannerIndex = index;
+                });
+              },
+              itemCount: banners.length,
+              itemBuilder: (context, index) {
+                final banner = banners[index];
+                return AnimatedBuilder(
+                  animation: _bannerAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: 0.95 + (0.05 * _bannerAnimation.value),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.deepOrange.withValues(alpha: 0.3),
+                              spreadRadius: 1,
+                              blurRadius: 15,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                          image: DecorationImage(
+                            image: AssetImage(banner['image']!),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withValues(alpha: 0.7),
+                              ],
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  banner['title']!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  banner['subtitle']!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontFamily: 'Roboto',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Banner indicators
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: banners.asMap().entries.map((entry) {
+              return Container(
+                width: 8.0,
+                height: 8.0,
+                margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _currentBannerIndex == entry.key
+                      ? Colors.deepOrange
+                      : Colors.grey.withValues(alpha: 0.4),
+                ),
+              );
+            }).toList(),
           ),
         ],
-        image: const DecorationImage(
-          image: AssetImage('images/food.jpg'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            // ignore: deprecated_member_use
-            colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Special Offer!',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Poppins',
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Get 20% off on all salads this week',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontFamily: 'Roboto',
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -682,6 +797,176 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget _buildRestaurantsSection() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Restaurants",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
+                  color: Colors.grey[800],
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SeeAllScreen(
+                        title: 'All Restaurants',
+                        items: restaurants,
+                        itemType: 'restaurants',
+                      ),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "See All",
+                  style: TextStyle(
+                    color: Colors.deepOrange,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 200,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: restaurants.length,
+              itemBuilder: (context, index) {
+                final restaurant = restaurants[index];
+                return _buildRestaurantCard(restaurant);
+              },
+            ),
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRestaurantCard(Map<String, dynamic> restaurant) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                RestaurantDetailScreen(restaurant: restaurant),
+          ),
+        );
+      },
+      child: Container(
+        width: 280,
+        margin: const EdgeInsets.only(right: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.1),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 120,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
+                image: DecorationImage(
+                  image: AssetImage(restaurant['image']),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    restaurant['name'],
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Poppins',
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    restaurant['description'],
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                      fontFamily: 'Roboto',
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.amber, size: 16),
+                      const SizedBox(width: 4),
+                      Text(
+                        restaurant['rating'].toString(),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Icon(
+                        Icons.access_time,
+                        color: Colors.grey[600],
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        restaurant['deliveryTime'],
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      ),
+                      const Spacer(),
+                      Text(
+                        'Rwf ${restaurant['deliveryFee']}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.deepOrange,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildFeaturedProductsSection() {
     return Container(
       padding: const EdgeInsets.all(14.0),
@@ -701,8 +986,19 @@ class _HomeState extends State<Home> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
-                child: Text(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SeeAllScreen(
+                        title: "Today's Trends",
+                        items: featuredProducts,
+                        itemType: 'products',
+                      ),
+                    ),
+                  );
+                },
+                child: const Text(
                   "See All",
                   style: TextStyle(
                     color: Colors.deepOrange,
@@ -713,7 +1009,7 @@ class _HomeState extends State<Home> {
             ],
           ),
           SizedBox(
-            height: 318,
+            height: 280,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: featuredProducts.length,
@@ -738,15 +1034,15 @@ class _HomeState extends State<Home> {
     return GestureDetector(
       onTap: () => _onProductTap(product),
       child: Container(
-        width: 200,
+        width: 180,
+        height: 280,
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              // ignore: deprecated_member_use
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               spreadRadius: 1,
               blurRadius: 15,
               offset: const Offset(0, 5),
@@ -759,11 +1055,12 @@ class _HomeState extends State<Home> {
             Stack(
               children: [
                 Container(
-                  height: 140,
+                  height: 120,
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
                     ),
                     image: DecorationImage(
                       image: AssetImage(
@@ -776,74 +1073,90 @@ class _HomeState extends State<Home> {
                 Positioned(
                   top: 8,
                   right: 8,
-                  child: IconButton(
-                    onPressed: () => _toggleFavorite(index, section),
-                    icon: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? Colors.red : Colors.white,
-                      size: 24,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.9),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      onPressed: () => _toggleFavorite(index, section),
+                      icon: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorite ? Colors.red : Colors.grey[600],
+                        size: 20,
+                      ),
+                      padding: const EdgeInsets.all(4),
+                      constraints: const BoxConstraints(),
                     ),
                   ),
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product['name'] ?? 'Product Name',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
-                      color: Colors.grey[800],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product['name'] ?? 'Product Name',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Poppins',
+                        color: Colors.grey[800],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    product['description'] ?? 'Product description',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                      fontFamily: 'Roboto',
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Rwf ${product['price']?.toString() ?? '0'}',
+                    const SizedBox(height: 4),
+                    Expanded(
+                      child: Text(
+                        product['description'] ?? 'Product description',
                         style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.deepOrange,
-                          fontFamily: 'Poppins',
+                          fontSize: 11,
+                          color: Colors.grey[600],
+                          fontFamily: 'Roboto',
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.deepOrange,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: IconButton(
-                          onPressed: () => _onProductTap(product),
-                          icon: const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                            size: 20,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Rwf ${product['price']?.toString() ?? '0'}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.deepOrange,
+                              fontFamily: 'Poppins',
+                            ),
                           ),
-                          padding: const EdgeInsets.all(8),
-                          constraints: const BoxConstraints(),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.deepOrange,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: IconButton(
+                            onPressed: () => _addToCart(product, 1),
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            padding: const EdgeInsets.all(6),
+                            constraints: const BoxConstraints(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -908,8 +1221,7 @@ class _HomeState extends State<Home> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        // ignore: deprecated_member_use
-                        color: Colors.grey.withOpacity(0.1),
+                        color: Colors.grey.withValues(alpha: 0.1),
                         spreadRadius: 1,
                         blurRadius: 10,
                         offset: const Offset(0, 5),
@@ -923,6 +1235,7 @@ class _HomeState extends State<Home> {
                         children: [
                           Container(
                             height: 120,
+                            width: double.infinity,
                             decoration: BoxDecoration(
                               borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(16),
@@ -939,56 +1252,92 @@ class _HomeState extends State<Home> {
                           Positioned(
                             top: 4,
                             right: 4,
-                            child: IconButton(
-                              onPressed: () =>
-                                  _toggleFavorite(originalIndex, 'popular'),
-                              icon: Icon(
-                                isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: isFavorite ? Colors.red : Colors.white,
-                                size: 20,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.9),
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                onPressed: () =>
+                                    _toggleFavorite(originalIndex, 'popular'),
+                                icon: Icon(
+                                  isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: isFavorite
+                                      ? Colors.red
+                                      : Colors.grey[600],
+                                  size: 18,
+                                ),
+                                padding: const EdgeInsets.all(4),
+                                constraints: const BoxConstraints(),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              product['name'] ?? 'Product Name',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Poppins',
-                                color: Colors.grey[800],
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                product['name'] ?? 'Product Name',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Poppins',
+                                  color: Colors.grey[800],
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              product['category'] ?? 'Category',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                                fontFamily: 'Roboto',
+                              const SizedBox(height: 4),
+                              Text(
+                                product['category'] ?? 'Category',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey[600],
+                                  fontFamily: 'Roboto',
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Rwf ${product['price']?.toString() ?? '0'}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.deepOrange,
-                                fontFamily: 'Poppins',
+                              const Spacer(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Rwf ${product['price']?.toString() ?? '0'}',
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.deepOrange,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.deepOrange,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: IconButton(
+                                      onPressed: () => _addToCart(product, 1),
+                                      icon: const Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                      padding: const EdgeInsets.all(4),
+                                      constraints: const BoxConstraints(),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -1033,6 +1382,34 @@ class _HomeState extends State<Home> {
         setState(() {
           _currentBottomNavIndex = index;
         });
+
+        // Handle navigation based on index
+        switch (index) {
+          case 0: // Home - already on home, do nothing
+            break;
+          case 1: // Search
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchScreen(
+                  products: popularItems,
+                  restaurants: restaurants,
+                ),
+              ),
+            );
+            break;
+          case 2: // Favorites
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Favorites - Coming Soon!')),
+            );
+            break;
+          case 3: // Menu/Profile
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfileScreen()),
+            );
+            break;
+        }
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
