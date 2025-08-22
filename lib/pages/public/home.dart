@@ -449,32 +449,80 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
       floatingActionButton: Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: SizedBox(
-          width: 50,
-          height: 50,
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CartScreen(
-                    cartItems: cartItems,
-                    onCartUpdated: (updatedCart) {
-                      setState(() {
-                        cartItems = updatedCart;
-                      });
-                    },
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: const LinearGradient(
+            colors: [Colors.deepOrange, Colors.orange],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.deepOrange.withValues(alpha: 0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CartScreen(
+                  cartItems: cartItems,
+                  onCartUpdated: (updatedCart) {
+                    setState(() {
+                      cartItems = updatedCart;
+                    });
+                  },
+                ),
+              ),
+            );
+          },
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              const Icon(
+                Icons.shopping_bag_outlined,
+                color: Colors.white,
+                size: 24,
+              ),
+              if (cartItems.isNotEmpty)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      cartItems.length.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-              );
-            },
-            backgroundColor: Colors.deepOrange,
-            child: const Icon(
-              Icons.shopping_cart,
-              color: Colors.white,
-              size: 20,
-            ), // adjust icon size too
+            ],
           ),
         ),
       ),
@@ -1391,38 +1439,42 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Widget _buildBottomNavigationBar() {
-    return Container(
+    return BottomAppBar(
       height: 70,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(37, 71, 68, 68),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      child: BottomAppBar(
-        color: Colors.transparent,
-        elevation: 0,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavBarItem(Icons.home, 'Home', 0),
-              _buildNavBarItem(Icons.search, 'Search', 1),
-              const SizedBox(width: 40), // Space for the center FAB
-              _buildNavBarItem(Icons.favorite, 'Favorites', 2),
-              _buildNavBarItem(Icons.menu, 'Menu', 3),
-            ],
-          ),
+      color: Colors.white,
+      elevation: 8,
+      shadowColor: Colors.black.withValues(alpha: 0.1),
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 8.0,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavBarItem(Icons.home_outlined, Icons.home, 'Home', 0),
+            _buildNavBarItem(Icons.search_outlined, Icons.search, 'Search', 1),
+            const SizedBox(width: 40), // Space for the center FAB
+            _buildNavBarItem(
+              Icons.favorite_outline,
+              Icons.favorite,
+              'Favorites',
+              2,
+            ),
+            _buildNavBarItem(Icons.menu_outlined, Icons.menu, 'Menu', 3),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildNavBarItem(IconData icon, String label, int index) {
+  Widget _buildNavBarItem(
+    IconData outlinedIcon,
+    IconData filledIcon,
+    String label,
+    int index,
+  ) {
+    final isSelected = _currentBottomNavIndex == index;
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -1458,26 +1510,27 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              color: _currentBottomNavIndex == index
-                  ? Colors.deepOrange
-                  : Colors.grey,
-              size: 24,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                isSelected ? filledIcon : outlinedIcon,
+                key: ValueKey(isSelected),
+                color: isSelected ? Colors.deepOrange : Colors.grey[600],
+                size: 24,
+              ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
-                color: _currentBottomNavIndex == index
-                    ? Colors.deepOrange
-                    : Colors.grey,
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
+                color: isSelected ? Colors.deepOrange : Colors.grey[600],
+                fontSize: 11,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                letterSpacing: -0.2,
               ),
             ),
           ],
