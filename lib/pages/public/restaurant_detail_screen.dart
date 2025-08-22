@@ -20,12 +20,6 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
   List<Map<String, dynamic>> cartItems = [];
   String selectedCategory = '';
 
-  // Banner related variables
-  PageController _bannerPageController = PageController();
-  int _currentBannerIndex = 0;
-  late AnimationController _bannerAnimationController;
-  late Animation<double> _bannerAnimation;
-
   // Restaurant-specific categories
   final List<Map<String, String>> categories = [
     {'name': 'Ice Cream', 'icon': 'images/ice-cream.png'},
@@ -34,20 +28,6 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
     {'name': 'Burger', 'icon': 'images/burger.png'},
     {'name': 'Sushi', 'icon': 'images/salad.png'},
     {'name': 'Pasta', 'icon': 'images/pizza.png'},
-  ];
-
-  // Restaurant-specific banners
-  final List<Map<String, String>> restaurantBanners = [
-    {
-      'image': 'images/food.jpg',
-      'title': 'Restaurant Special!',
-      'subtitle': 'Exclusive deals only at this restaurant',
-    },
-    {
-      'image': 'images/burger.png',
-      'title': 'Chef\'s Choice!',
-      'subtitle': 'Try our signature dishes',
-    },
   ];
 
   // Restaurant products (filtered from main products)
@@ -91,48 +71,13 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
     super.initState();
     filteredProducts = List.from(restaurantProducts);
     _searchController.addListener(_onSearchChanged);
-
-    // Initialize banner animation
-    _bannerAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-    _bannerAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _bannerAnimationController,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    // Start banner auto-sliding
-    _startBannerAutoSlide();
-    _bannerAnimationController.forward();
   }
 
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
-    _bannerPageController.dispose();
-    _bannerAnimationController.dispose();
     super.dispose();
-  }
-
-  void _startBannerAutoSlide() {
-    Future.delayed(const Duration(seconds: 4), () {
-      if (mounted) {
-        setState(() {
-          _currentBannerIndex =
-              (_currentBannerIndex + 1) % restaurantBanners.length;
-        });
-        _bannerPageController.animateToPage(
-          _currentBannerIndex,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-        _startBannerAutoSlide();
-      }
-    });
   }
 
   void _onSearchChanged() {
@@ -233,15 +178,34 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
             fontWeight: FontWeight.w600,
             fontSize: 18,
             letterSpacing: -0.3,
+            color: Colors.black87,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFF8F9FA),
         foregroundColor: Colors.black87,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, size: 20),
-          onPressed: () => Navigator.pop(context),
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.9),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              size: 18,
+              color: Colors.black87,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
       ),
       body: SafeArea(
@@ -254,9 +218,6 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
 
               // Search Bar
               _buildSearchBar(),
-
-              // Restaurant Banners
-              _buildRestaurantBanners(),
 
               // Categories Section
               _buildCategoriesSection(),
@@ -450,114 +411,6 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
                 border: InputBorder.none,
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRestaurantBanners() {
-    return Container(
-      margin: const EdgeInsets.all(14.0),
-      height: 140,
-      child: Column(
-        children: [
-          Expanded(
-            child: PageView.builder(
-              controller: _bannerPageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentBannerIndex = index;
-                });
-              },
-              itemCount: restaurantBanners.length,
-              itemBuilder: (context, index) {
-                final banner = restaurantBanners[index];
-                return AnimatedBuilder(
-                  animation: _bannerAnimation,
-                  builder: (context, child) {
-                    return Transform.scale(
-                      scale: 0.95 + (0.05 * _bannerAnimation.value),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.deepOrange.withValues(alpha: 0.3),
-                              spreadRadius: 1,
-                              blurRadius: 15,
-                              offset: const Offset(0, 8),
-                            ),
-                          ],
-                          image: DecorationImage(
-                            image: AssetImage(banner['image']!),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.transparent,
-                                Colors.black.withValues(alpha: 0.7),
-                              ],
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  banner['title']!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  banner['subtitle']!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontFamily: 'Roboto',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: restaurantBanners.asMap().entries.map((entry) {
-              return Container(
-                width: 8.0,
-                height: 8.0,
-                margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _currentBannerIndex == entry.key
-                      ? Colors.deepOrange
-                      : Colors.grey.withValues(alpha: 0.4),
-                ),
-              );
-            }).toList(),
           ),
         ],
       ),
