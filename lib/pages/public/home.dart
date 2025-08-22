@@ -423,9 +423,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               // Header Section
               _buildHeaderSection(),
 
-              // Search Bar
-              _buildSearchBar(),
-
               // Banner
               _buildBanner(),
 
@@ -578,52 +575,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                SearchScreen(products: popularItems, restaurants: restaurants),
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.1),
-              spreadRadius: 1,
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.search, color: Colors.grey[400]),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                'Search for food...',
-                style: TextStyle(
-                  color: Colors.grey[500],
-                  fontSize: 14,
-                  fontFamily: 'Roboto',
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
