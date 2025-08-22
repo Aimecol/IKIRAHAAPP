@@ -578,7 +578,7 @@ class _HomeState extends State<Home> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Categories",
+            "Food Categories",
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
