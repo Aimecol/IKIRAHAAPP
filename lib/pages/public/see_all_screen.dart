@@ -124,12 +124,43 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Colors.deepOrange,
-        foregroundColor: Colors.white,
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            letterSpacing: -0.3,
+            color: Colors.black87,
+          ),
+        ),
+        backgroundColor: const Color(0xFFF8F9FA),
+        foregroundColor: Colors.black87,
         elevation: 0,
+        centerTitle: true,
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.9),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              size: 18,
+              color: Colors.black87,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -209,12 +240,12 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withValues(alpha: 0.1),
                   spreadRadius: 1,
-                  blurRadius: 10,
+                  blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
               ],
@@ -229,8 +260,8 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          topRight: Radius.circular(16),
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
                         ),
                         image: DecorationImage(
                           image: AssetImage(
@@ -241,21 +272,30 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
                       ),
                     ),
                     Positioned(
-                      top: 4,
-                      right: 4,
+                      top: 6,
+                      right: 6,
                       child: Container(
+                        width: 32,
+                        height: 32,
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.9),
                           shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: IconButton(
                           onPressed: () => _toggleFavorite(index),
                           icon: Icon(
                             isFavorite ? Icons.favorite : Icons.favorite_border,
                             color: isFavorite ? Colors.red : Colors.grey[600],
-                            size: 18,
+                            size: 16,
                           ),
-                          padding: const EdgeInsets.all(4),
+                          padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                         ),
                       ),
@@ -264,7 +304,7 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -281,12 +321,14 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          product['category'] ?? 'Category',
+                          product['description'] ?? 'Product description',
                           style: TextStyle(
                             fontSize: 11,
                             color: Colors.grey[600],
                             fontFamily: 'Roboto',
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const Spacer(),
                         Row(
@@ -296,7 +338,7 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
                               child: Text(
                                 'Rwf ${product['price']?.toString() ?? '0'}',
                                 style: const TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.deepOrange,
                                   fontFamily: 'Poppins',
@@ -304,18 +346,29 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
                               ),
                             ),
                             Container(
+                              width: 28,
+                              height: 28,
                               decoration: BoxDecoration(
                                 color: Colors.deepOrange,
-                                borderRadius: BorderRadius.circular(8),
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.deepOrange.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
                               ),
                               child: IconButton(
                                 onPressed: () => _addToCart(product, 1),
                                 icon: const Icon(
                                   Icons.add,
                                   color: Colors.white,
-                                  size: 16,
+                                  size: 14,
                                 ),
-                                padding: const EdgeInsets.all(4),
+                                padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(),
                               ),
                             ),
