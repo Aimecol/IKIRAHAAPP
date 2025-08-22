@@ -89,12 +89,43 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: Text(widget.categoryName),
-        backgroundColor: Colors.deepOrange,
-        foregroundColor: Colors.white,
+        title: Text(
+          widget.categoryName,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            letterSpacing: -0.3,
+            color: Colors.black87,
+          ),
+        ),
+        backgroundColor: const Color(0xFFF8F9FA),
+        foregroundColor: Colors.black87,
         elevation: 0,
+        centerTitle: true,
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.9),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              size: 18,
+              color: Colors.black87,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -165,12 +196,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
+                                color: Colors.grey.withValues(alpha: 0.1),
                                 spreadRadius: 1,
-                                blurRadius: 10,
+                                blurRadius: 15,
                                 offset: const Offset(0, 5),
                               ),
                             ],
@@ -182,10 +213,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 children: [
                                   Container(
                                     height: 120,
+                                    width: double.infinity,
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(16),
-                                        topRight: Radius.circular(16),
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20),
                                       ),
                                       image: DecorationImage(
                                         image: AssetImage(
@@ -197,50 +229,137 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     ),
                                   ),
                                   Positioned(
-                                    top: 4,
-                                    right: 4,
-                                    child: IconButton(
-                                      onPressed: () => _toggleFavorite(index),
-                                      icon: Icon(
-                                        isFavorite
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                        color: isFavorite
-                                            ? Colors.red
-                                            : Colors.white,
-                                        size: 20,
+                                    top: 6,
+                                    right: 6,
+                                    child: Container(
+                                      width: 32,
+                                      height: 32,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.9,
+                                        ),
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.1,
+                                            ),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: IconButton(
+                                        onPressed: () => _toggleFavorite(index),
+                                        icon: Icon(
+                                          isFavorite
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: isFavorite
+                                              ? Colors.red
+                                              : Colors.grey[600],
+                                          size: 16,
+                                        ),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product['name'] ?? 'Product Name',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Poppins',
-                                        color: Colors.grey[800],
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        product['name'] ?? 'Product Name',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Poppins',
+                                          color: Colors.grey[800],
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'Rwf ${product['price']?.toString() ?? '0'}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.deepOrange,
-                                        fontFamily: 'Poppins',
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        product['description'] ??
+                                            'Product description',
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.grey[600],
+                                          fontFamily: 'Roboto',
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                  ],
+                                      const Spacer(),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              'Rwf ${product['price']?.toString() ?? '0'}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.deepOrange,
+                                                fontFamily: 'Poppins',
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 28,
+                                            height: 28,
+                                            decoration: BoxDecoration(
+                                              color: Colors.deepOrange,
+                                              shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.deepOrange
+                                                      .withValues(alpha: 0.3),
+                                                  blurRadius: 4,
+                                                  offset: const Offset(0, 2),
+                                                ),
+                                              ],
+                                            ),
+                                            child: IconButton(
+                                              onPressed: () {
+                                                // Add to cart functionality
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'Added ${product['name']} to cart',
+                                                    ),
+                                                    duration: const Duration(
+                                                      seconds: 2,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              icon: const Icon(
+                                                Icons.add,
+                                                color: Colors.white,
+                                                size: 14,
+                                              ),
+                                              padding: EdgeInsets.zero,
+                                              constraints:
+                                                  const BoxConstraints(),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
