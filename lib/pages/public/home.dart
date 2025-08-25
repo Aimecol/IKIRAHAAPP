@@ -46,17 +46,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       'subtitle': 'Get 20% off on all salads this week',
     },
     {
-      'image': 'images/burger.png',
+      'image': 'images/peace-restaurant.webp',
       'title': 'New Burgers!',
       'subtitle': 'Try our delicious new burger collection',
     },
     {
-      'image': 'images/pizza.png',
+      'image': 'images/ice-restaurant.jpg',
       'title': 'Pizza Party!',
       'subtitle': 'Buy 2 pizzas and get 1 free today only',
     },
     {
-      'image': 'images/ice-cream.png',
+      'image': 'images/glass-restaurant.jpg',
       'title': 'Sweet Treats!',
       'subtitle': 'Cool down with our premium ice cream',
     },
@@ -1390,52 +1390,33 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Widget _buildBottomNavigationBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 20,
-            offset: const Offset(0, -5),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 40,
-            offset: const Offset(0, -10),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: BottomAppBar(
-        height: 70,
-        color: Colors.transparent,
-        elevation: 0,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavBarItem(Icons.home_outlined, Icons.home, 'Home', 0),
-              _buildNavBarItem(
-                Icons.search_outlined,
-                Icons.search,
-                'Search',
-                1,
-              ),
-              const SizedBox(width: 40), // Space for the center FAB
-              _buildNavBarItem(
-                Icons.favorite_outline,
-                Icons.favorite,
-                'Favorites',
-                2,
-              ),
-              _buildNavBarItem(Icons.menu_outlined, Icons.menu, 'Menu', 3),
-            ],
-          ),
+    return BottomAppBar(
+      height: 70,
+      color: const Color.fromARGB(
+        255,
+        201,
+        196,
+        196,
+      ), // ✅ Apply color here instead of Container
+      elevation: 8, // ✅ Let BottomAppBar handle shadow
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 4.0,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavBarItem(Icons.home_outlined, Icons.home, 'Home', 0),
+            _buildNavBarItem(Icons.search_outlined, Icons.search, 'Search', 1),
+            const SizedBox(width: 40), // Space for the center FAB
+            _buildNavBarItem(
+              Icons.favorite_outline,
+              Icons.favorite,
+              'Favorites',
+              2,
+            ),
+            _buildNavBarItem(Icons.menu_outlined, Icons.menu, 'Menu', 3),
+          ],
         ),
       ),
     );
