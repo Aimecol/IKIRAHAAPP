@@ -1,0 +1,35 @@
+IKIRAHA Application License Agreement
+-------------------------------------
+
+Copyright (c) IKIGUGU Group Ltd. All rights reserved.
+
+IMPORTANT: Please read this license agreement carefully before installing or using the IKIRAHA application.
+
+1. License Grant
+   IKIGUGU Group Ltd. ("the Company") grants you a non-exclusive, non-transferable license to install and use the IKIRAHA application on your device(s) for personal or business use in accordance with this agreement.
+
+2. Ownership
+   The IKIRAHA application, including its design, code, and related materials, remains the property of IKIGUGU Group Ltd. This license does not grant you ownership rights of any kind.
+
+3. Restrictions
+   - You may not copy, modify, distribute, or reverse-engineer the IKIRAHA application.
+   - You may not use the IKIRAHA application for any unlawful purposes.
+   - You may not sublicense or resell the application without written permission from the Company.
+
+4. Data and Privacy
+   The IKIRAHA application may collect and process user information in accordance with the Company’s Privacy Policy.
+
+5. Disclaimer of Warranty
+   The IKIRAHA application is provided "AS IS" without warranty of any kind. The Company does not guarantee uninterrupted service, error-free operation, or suitability for your specific purposes.
+
+6. Limitation of Liability
+   In no event shall IKIGUGU Group Ltd. be liable for any damages arising from the use of the IKIRAHA application.
+
+7. Termination
+   This license will terminate automatically if you fail to comply with the terms of this agreement. Upon termination, you must uninstall and stop using the IKIRAHA application.
+
+By clicking "I Agree" or installing the application, you acknowledge that you have read, understood, and agree to be bound by this license agreement.
+
+-------------------------------------
+IKIGUGU Group Ltd
+Kinigi Road, Ganza Plaza, Musanze, Rwanda
