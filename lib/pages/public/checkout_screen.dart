@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ikirahaapp/widgets/bottom_navigation_widget.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
@@ -515,6 +516,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentIndex: -1, // No specific tab selected for checkout screen
+      ),
+      floatingActionButton: Container(), // Empty container to hide default FAB
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
