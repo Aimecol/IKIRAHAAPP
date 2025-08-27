@@ -7,6 +7,7 @@ import 'package:ikirahaapp/pages/public/see_all_screen.dart';
 import 'package:ikirahaapp/widgets/product_card.dart';
 import 'package:ikirahaapp/pages/public/profile_screen.dart';
 import 'package:ikirahaapp/pages/public/search_screen.dart';
+import 'package:ikirahaapp/pages/public/orders_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -1008,32 +1009,32 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             ],
           ),
           const SizedBox(height: 16),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.75,
-            ),
-            itemCount: featuredProducts.length,
-            itemBuilder: (context, index) {
-              final product = featuredProducts[index];
-              final originalIndex = featuredProducts.indexWhere(
-                (p) => p['name'] == product['name'],
-              );
+          SizedBox(
+            height: 240,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: featuredProducts.length,
+              itemBuilder: (context, index) {
+                final product = featuredProducts[index];
+                final originalIndex = featuredProducts.indexWhere(
+                  (p) => p['name'] == product['name'],
+                );
 
-              return ProductCard(
-                product: product,
-                onTap: () => _onProductTap(product),
-                onFavoriteToggle: () =>
-                    _toggleFavorite(originalIndex, 'featured'),
-                onAddToCart: () => _addToCart(product, 1),
-                showFavoriteButton: true,
-                showAddButton: true,
-              );
-            },
+                return Container(
+                  width: 160,
+                  margin: const EdgeInsets.only(right: 16),
+                  child: ProductCard(
+                    product: product,
+                    onTap: () => _onProductTap(product),
+                    onFavoriteToggle: () =>
+                        _toggleFavorite(originalIndex, 'featured'),
+                    onAddToCart: () => _addToCart(product, 1),
+                    showFavoriteButton: true,
+                    showAddButton: true,
+                  ),
+                );
+              },
+            ),
           ),
           const SizedBox(height: 24),
         ],
@@ -1072,30 +1073,38 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             ],
           ),
           const SizedBox(height: 16),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.75,
-            ),
-            itemCount: filteredProducts.length,
-            itemBuilder: (context, index) {
-              final product = filteredProducts[index];
-              final originalIndex = popularItems.indexWhere(
-                (p) => p['name'] == product['name'],
-              );
+          OrientationBuilder(
+            builder: (context, orientation) {
+              final isLandscape = orientation == Orientation.landscape;
+              final crossAxisCount = isLandscape ? 4 : 2;
+              final childAspectRatio = isLandscape ? 0.8 : 0.75;
 
-              return ProductCard(
-                product: product,
-                onTap: () => _onProductTap(product),
-                onFavoriteToggle: () =>
-                    _toggleFavorite(originalIndex, 'popular'),
-                onAddToCart: () => _addToCart(product, 1),
-                showFavoriteButton: true,
-                showAddButton: true,
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: childAspectRatio,
+                ),
+                itemCount: filteredProducts.length,
+                itemBuilder: (context, index) {
+                  final product = filteredProducts[index];
+                  final originalIndex = popularItems.indexWhere(
+                    (p) => p['name'] == product['name'],
+                  );
+
+                  return ProductCard(
+                    product: product,
+                    onTap: () => _onProductTap(product),
+                    onFavoriteToggle: () =>
+                        _toggleFavorite(originalIndex, 'popular'),
+                    onAddToCart: () => _addToCart(product, 1),
+                    showFavoriteButton: true,
+                    showAddButton: true,
+                  );
+                },
               );
             },
           ),
@@ -1126,9 +1135,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             _buildNavBarItem(Icons.search_outlined, Icons.search, 'Search', 1),
             const SizedBox(width: 40), // Space for the center FAB
             _buildNavBarItem(
-              Icons.favorite_outline,
-              Icons.favorite,
-              'Favorites',
+              Icons.receipt_long_outlined,
+              Icons.receipt_long,
+              'Orders',
               2,
             ),
             _buildNavBarItem(Icons.menu_outlined, Icons.menu, 'Menu', 3),
@@ -1167,9 +1176,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               ),
             );
             break;
-          case 2: // Favorites
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Favorites - Coming Soon!')),
+          case 2: // Orders
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const OrdersScreen()),
             );
             break;
           case 3: // Menu/Profile
