@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'product_details_screen.dart';
 import 'package:ikirahaapp/widgets/product_card.dart';
+import 'package:ikirahaapp/widgets/bottom_navigation_widget.dart';
 
 class CategoryScreen extends StatefulWidget {
   final String categoryName;
@@ -178,40 +179,54 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                     ),
                   )
-                : GridView.builder(
-                    padding: const EdgeInsets.all(16),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
+                : OrientationBuilder(
+                    builder: (context, orientation) {
+                      final isLandscape = orientation == Orientation.landscape;
+                      final crossAxisCount = isLandscape ? 4 : 2;
+                      final childAspectRatio = isLandscape ? 0.8 : 0.75;
+
+                      return GridView.builder(
+                        padding: const EdgeInsets.all(16),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 16,
-                          childAspectRatio: 0.75,
+                          childAspectRatio: childAspectRatio,
                         ),
-                    itemCount: filteredProducts.length,
-                    itemBuilder: (context, index) {
-                      final product = filteredProducts[index];
+                        itemCount: filteredProducts.length,
+                        itemBuilder: (context, index) {
+                          final product = filteredProducts[index];
 
-                      return ProductCard(
-                        product: product,
-                        onTap: () => _onProductTap(product),
-                        onFavoriteToggle: () => _toggleFavorite(index),
-                        onAddToCart: () {
-                          // Add to cart functionality
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Added ${product['name']} to cart'),
-                              duration: const Duration(seconds: 2),
-                            ),
+                          return ProductCard(
+                            product: product,
+                            onTap: () => _onProductTap(product),
+                            onFavoriteToggle: () => _toggleFavorite(index),
+                            onAddToCart: () {
+                              // Add to cart functionality
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Added ${product['name']} to cart',
+                                  ),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            },
+                            showFavoriteButton: true,
+                            showAddButton: true,
                           );
                         },
-                        showFavoriteButton: true,
-                        showAddButton: true,
                       );
                     },
                   ),
           ),
         ],
       ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentIndex: -1, // No specific tab selected for category screen
+      ),
+      floatingActionButton: Container(), // Empty container to hide default FAB
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
