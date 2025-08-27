@@ -3,6 +3,7 @@ import 'package:ikirahaapp/pages/public/product_details_screen.dart';
 import 'package:ikirahaapp/pages/public/category_screen.dart';
 import 'package:ikirahaapp/pages/public/cart_screen.dart';
 import 'package:ikirahaapp/widgets/product_card.dart';
+import 'package:ikirahaapp/widgets/bottom_navigation_widget.dart';
 
 class RestaurantDetailScreen extends StatefulWidget {
   final Map<String, dynamic> restaurant;
@@ -311,6 +312,18 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      bottomNavigationBar: BottomNavigationWidget(
+        currentIndex:
+            -1, // No specific tab selected for restaurant detail screen
+        cartItems: cartItems,
+        onCartUpdated: (updatedCart) {
+          setState(() {
+            cartItems = updatedCart;
+          });
+        },
+        products: restaurantProducts,
+        restaurants: const [],
+      ),
     );
   }
 
@@ -540,29 +553,37 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
             ),
           ),
           const SizedBox(height: 16),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.75,
-            ),
-            itemCount: filteredProducts.length,
-            itemBuilder: (context, index) {
-              final product = filteredProducts[index];
-              final originalIndex = restaurantProducts.indexWhere(
-                (p) => p['name'] == product['name'],
-              );
+          OrientationBuilder(
+            builder: (context, orientation) {
+              final isLandscape = orientation == Orientation.landscape;
+              final crossAxisCount = isLandscape ? 4 : 2;
+              final childAspectRatio = isLandscape ? 0.8 : 0.75;
 
-              return ProductCard(
-                product: product,
-                onTap: () => _onProductTap(product),
-                onFavoriteToggle: () => _toggleFavorite(originalIndex),
-                onAddToCart: () => _addToCart(product, 1),
-                showFavoriteButton: true,
-                showAddButton: true,
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: childAspectRatio,
+                ),
+                itemCount: filteredProducts.length,
+                itemBuilder: (context, index) {
+                  final product = filteredProducts[index];
+                  final originalIndex = restaurantProducts.indexWhere(
+                    (p) => p['name'] == product['name'],
+                  );
+
+                  return ProductCard(
+                    product: product,
+                    onTap: () => _onProductTap(product),
+                    onFavoriteToggle: () => _toggleFavorite(originalIndex),
+                    onAddToCart: () => _addToCart(product, 1),
+                    showFavoriteButton: true,
+                    showAddButton: true,
+                  );
+                },
               );
             },
           ),
