@@ -26,9 +26,19 @@ class ProductCard extends StatelessWidget {
     final String productImage = product['image'] ?? 'images/salad2.png';
     final int productPrice = product['price'] ?? 0;
 
+    // Get screen dimensions and orientation
+    final screenWidth = MediaQuery.of(context).size.width;
+    final orientation = MediaQuery.of(context).orientation;
+
+    // Calculate responsive dimensions
+    final isLandscape = orientation == Orientation.landscape;
+    final cardWidth = isLandscape ? screenWidth * 0.25 : screenWidth * 0.42;
+    final imageHeight = isLandscape ? 80.0 : 100.0;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        width: cardWidth,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -47,7 +57,7 @@ class ProductCard extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: 120,
+                  height: imageHeight,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
@@ -142,7 +152,9 @@ class ProductCard extends StatelessWidget {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.deepOrange.withValues(alpha: 0.3),
+                                  color: Colors.deepOrange.withValues(
+                                    alpha: 0.3,
+                                  ),
                                   blurRadius: 4,
                                   offset: const Offset(0, 2),
                                 ),
