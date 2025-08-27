@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ikirahaapp/widgets/bottom_navigation_widget.dart';
 import 'package:ikirahaapp/pages/public/chat_screen.dart';
+import 'package:ikirahaapp/pages/public/checkout_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -381,21 +383,27 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                             child: ElevatedButton(
                               onPressed: () {
-                                widget.onAddToCart(widget.product, quantity);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Ordered $quantity $productName',
-                                    ),
-                                    duration: const Duration(seconds: 2),
-                                    backgroundColor: Colors.green,
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                // Create a cart item with the selected quantity
+                                final cartItem = {
+                                  ...widget.product,
+                                  'quantity': quantity,
+                                };
+
+                                // Navigate directly to checkout with this single item
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CheckoutScreen(
+                                      cartItems: [cartItem],
+                                      onOrderPlaced: () {
+                                        // Navigate back to home after order is placed
+                                        Navigator.of(
+                                          context,
+                                        ).popUntil((route) => route.isFirst);
+                                      },
                                     ),
                                   ),
                                 );
-                                Navigator.pop(context);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
@@ -425,6 +433,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentIndex: -1, // No specific tab selected for product details screen
+      ),
+      floatingActionButton: Container(), // Empty container to hide default FAB
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
