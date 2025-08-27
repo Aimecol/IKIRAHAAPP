@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ikirahaapp/pages/public/product_details_screen.dart';
+import 'package:ikirahaapp/pages/public/cart_screen.dart';
 import 'package:ikirahaapp/pages/public/category_screen.dart';
-import 'package:ikirahaapp/pages/public/checkout_screen.dart';
+import 'package:ikirahaapp/pages/public/product_details_screen.dart';
 import 'package:ikirahaapp/pages/public/restaurant_detail_screen.dart';
 import 'package:ikirahaapp/pages/public/see_all_screen.dart';
-import 'package:ikirahaapp/pages/public/cart_screen.dart';
+import 'package:ikirahaapp/widgets/product_card.dart';
 import 'package:ikirahaapp/pages/public/profile_screen.dart';
 import 'package:ikirahaapp/pages/public/search_screen.dart';
 
@@ -1007,177 +1007,36 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               ),
             ],
           ),
-          SizedBox(
-            height: 280,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: featuredProducts.length,
-              itemBuilder: (context, index) {
-                final product = featuredProducts[index];
-                return _buildFoodCard(product, index, 'featured');
-              },
+          const SizedBox(height: 16),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 0.75,
             ),
+            itemCount: featuredProducts.length,
+            itemBuilder: (context, index) {
+              final product = featuredProducts[index];
+              final originalIndex = featuredProducts.indexWhere(
+                (p) => p['name'] == product['name'],
+              );
+
+              return ProductCard(
+                product: product,
+                onTap: () => _onProductTap(product),
+                onFavoriteToggle: () =>
+                    _toggleFavorite(originalIndex, 'featured'),
+                onAddToCart: () => _addToCart(product, 1),
+                showFavoriteButton: true,
+                showAddButton: true,
+              );
+            },
           ),
+          const SizedBox(height: 24),
         ],
-      ),
-    );
-  }
-
-  Widget _buildFoodCard(
-    Map<String, dynamic> product,
-    int index,
-    String section,
-  ) {
-    bool isFavorite = product['isFavorite'] ?? false;
-
-    return GestureDetector(
-      onTap: () => _onProductTap(product),
-      child: Container(
-        width: 180,
-        height: 280,
-        margin: const EdgeInsets.only(right: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.1),
-              spreadRadius: 1,
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                Container(
-                  height: 120,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                    image: DecorationImage(
-                      image: AssetImage(
-                        product['image'] ?? 'images/salad2.png',
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 6,
-                  right: 6,
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.9),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      onPressed: () => _toggleFavorite(index, section),
-                      icon: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite ? Colors.red : Colors.grey[600],
-                        size: 16,
-                      ),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      product['name'] ?? 'Product Name',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Poppins',
-                        color: Colors.grey[800],
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      product['description'] ?? 'Product description',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey[600],
-                        fontFamily: 'Roboto',
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Rwf ${product['price']?.toString() ?? '0'}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.deepOrange,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            color: Colors.deepOrange,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.deepOrange.withValues(alpha: 0.3),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: IconButton(
-                            onPressed: () => _addToCart(product, 1),
-                            icon: const Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 14,
-                            ),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -1225,161 +1084,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             itemCount: filteredProducts.length,
             itemBuilder: (context, index) {
               final product = filteredProducts[index];
-              bool isFavorite = product['isFavorite'] ?? false;
               final originalIndex = popularItems.indexWhere(
                 (p) => p['name'] == product['name'],
               );
 
-              return GestureDetector(
+              return ProductCard(
+                product: product,
                 onTap: () => _onProductTap(product),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withValues(alpha: 0.1),
-                        spreadRadius: 1,
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        children: [
-                          Container(
-                            height: 120,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16),
-                              ),
-                              image: DecorationImage(
-                                image: AssetImage(
-                                  product['image'] ?? 'images/salad2.png',
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 6,
-                            right: 6,
-                            child: Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.9),
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.1),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: IconButton(
-                                onPressed: () =>
-                                    _toggleFavorite(originalIndex, 'popular'),
-                                icon: Icon(
-                                  isFavorite
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: isFavorite
-                                      ? Colors.red
-                                      : Colors.grey[600],
-                                  size: 16,
-                                ),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                product['name'] ?? 'Product Name',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins',
-                                  color: Colors.grey[800],
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                product['category'] ?? 'Category',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey[600],
-                                  fontFamily: 'Roboto',
-                                ),
-                              ),
-                              const Spacer(),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      'Rwf ${product['price']?.toString() ?? '0'}',
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.deepOrange,
-                                        fontFamily: 'Poppins',
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 28,
-                                    height: 28,
-                                    decoration: BoxDecoration(
-                                      color: Colors.deepOrange,
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.deepOrange.withValues(
-                                            alpha: 0.3,
-                                          ),
-                                          blurRadius: 4,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: IconButton(
-                                      onPressed: () => _addToCart(product, 1),
-                                      icon: const Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                      constraints: const BoxConstraints(),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                onFavoriteToggle: () =>
+                    _toggleFavorite(originalIndex, 'popular'),
+                onAddToCart: () => _addToCart(product, 1),
+                showFavoriteButton: true,
+                showAddButton: true,
               );
             },
           ),
