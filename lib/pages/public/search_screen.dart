@@ -313,24 +313,32 @@ class _SearchScreenState extends State<SearchScreen>
       return _buildNoResults('No food items found');
     }
 
-    return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: filteredProducts.length,
-      itemBuilder: (context, index) {
-        final product = filteredProducts[index];
-        return ProductCard(
-          product: product,
-          onTap: () => _onProductTap(product),
-          onFavoriteToggle: () => _toggleFavorite(index),
-          onAddToCart: () => _addToCart(product, 1),
-          showFavoriteButton: true,
-          showAddButton: true,
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final isLandscape = orientation == Orientation.landscape;
+        final crossAxisCount = isLandscape ? 4 : 2;
+        final childAspectRatio = isLandscape ? 0.8 : 0.75;
+
+        return GridView.builder(
+          padding: const EdgeInsets.all(16),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: childAspectRatio,
+          ),
+          itemCount: filteredProducts.length,
+          itemBuilder: (context, index) {
+            final product = filteredProducts[index];
+            return ProductCard(
+              product: product,
+              onTap: () => _onProductTap(product),
+              onFavoriteToggle: () => _toggleFavorite(index),
+              onAddToCart: () => _addToCart(product, 1),
+              showFavoriteButton: true,
+              showAddButton: true,
+            );
+          },
         );
       },
     );
