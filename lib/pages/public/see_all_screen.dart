@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ikirahaapp/pages/public/product_details_screen.dart';
 import 'package:ikirahaapp/pages/public/restaurant_detail_screen.dart';
+import 'package:ikirahaapp/widgets/product_card.dart';
 
 class SeeAllScreen extends StatefulWidget {
   final String title;
@@ -233,154 +234,14 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
       itemCount: filteredItems.length,
       itemBuilder: (context, index) {
         final product = filteredItems[index];
-        bool isFavorite = product['isFavorite'] ?? false;
 
-        return GestureDetector(
+        return ProductCard(
+          product: product,
           onTap: () => _onItemTap(product),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.1),
-                  spreadRadius: 1,
-                  blurRadius: 15,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      height: 120,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                        image: DecorationImage(
-                          image: AssetImage(
-                            product['image'] ?? 'images/salad2.png',
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 6,
-                      right: 6,
-                      child: Container(
-                        width: 32,
-                        height: 32,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.9),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: IconButton(
-                          onPressed: () => _toggleFavorite(index),
-                          icon: Icon(
-                            isFavorite ? Icons.favorite : Icons.favorite_border,
-                            color: isFavorite ? Colors.red : Colors.grey[600],
-                            size: 16,
-                          ),
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          product['name'] ?? 'Product Name',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Poppins',
-                            color: Colors.grey[800],
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          product['description'] ?? 'Product description',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey[600],
-                            fontFamily: 'Roboto',
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'Rwf ${product['price']?.toString() ?? '0'}',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.deepOrange,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 28,
-                              height: 28,
-                              decoration: BoxDecoration(
-                                color: Colors.deepOrange,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.deepOrange.withValues(
-                                      alpha: 0.3,
-                                    ),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: IconButton(
-                                onPressed: () => _addToCart(product, 1),
-                                icon: const Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 14,
-                                ),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          onFavoriteToggle: () => _toggleFavorite(index),
+          onAddToCart: () => _addToCart(product, 1),
+          showFavoriteButton: true,
+          showAddButton: true,
         );
       },
     );
