@@ -223,25 +223,33 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
   }
 
   Widget _buildProductsGrid() {
-    return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: filteredItems.length,
-      itemBuilder: (context, index) {
-        final product = filteredItems[index];
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final isLandscape = orientation == Orientation.landscape;
+        final crossAxisCount = isLandscape ? 4 : 2;
+        final childAspectRatio = isLandscape ? 0.8 : 0.75;
 
-        return ProductCard(
-          product: product,
-          onTap: () => _onItemTap(product),
-          onFavoriteToggle: () => _toggleFavorite(index),
-          onAddToCart: () => _addToCart(product, 1),
-          showFavoriteButton: true,
-          showAddButton: true,
+        return GridView.builder(
+          padding: const EdgeInsets.all(16),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: childAspectRatio,
+          ),
+          itemCount: filteredItems.length,
+          itemBuilder: (context, index) {
+            final product = filteredItems[index];
+
+            return ProductCard(
+              product: product,
+              onTap: () => _onItemTap(product),
+              onFavoriteToggle: () => _toggleFavorite(index),
+              onAddToCart: () => _addToCart(product, 1),
+              showFavoriteButton: true,
+              showAddButton: true,
+            );
+          },
         );
       },
     );
