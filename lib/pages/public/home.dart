@@ -491,7 +491,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             alignment: Alignment.center,
             children: [
               const Icon(
-                Icons.shopping_bag_outlined,
+                Icons.shopping_cart_outlined,
                 color: Colors.white,
                 size: 24,
               ),
@@ -1073,38 +1073,30 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             ],
           ),
           const SizedBox(height: 16),
-          OrientationBuilder(
-            builder: (context, orientation) {
-              final isLandscape = orientation == Orientation.landscape;
-              final crossAxisCount = isLandscape ? 4 : 2;
-              final childAspectRatio = isLandscape ? 0.8 : 0.75;
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 0.75,
+            ),
+            itemCount: filteredProducts.length,
+            itemBuilder: (context, index) {
+              final product = filteredProducts[index];
+              final originalIndex = popularItems.indexWhere(
+                (p) => p['name'] == product['name'],
+              );
 
-              return GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: childAspectRatio,
-                ),
-                itemCount: filteredProducts.length,
-                itemBuilder: (context, index) {
-                  final product = filteredProducts[index];
-                  final originalIndex = popularItems.indexWhere(
-                    (p) => p['name'] == product['name'],
-                  );
-
-                  return ProductCard(
-                    product: product,
-                    onTap: () => _onProductTap(product),
-                    onFavoriteToggle: () =>
-                        _toggleFavorite(originalIndex, 'popular'),
-                    onAddToCart: () => _addToCart(product, 1),
-                    showFavoriteButton: true,
-                    showAddButton: true,
-                  );
-                },
+              return ProductCard(
+                product: product,
+                onTap: () => _onProductTap(product),
+                onFavoriteToggle: () =>
+                    _toggleFavorite(originalIndex, 'popular'),
+                onAddToCart: () => _addToCart(product, 1),
+                showFavoriteButton: true,
+                showAddButton: true,
               );
             },
           ),
@@ -1176,10 +1168,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               ),
             );
             break;
-          case 2: // Orders
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const OrdersScreen()),
+          case 2: // Favorites
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Favorites - Coming Soon!')),
             );
             break;
           case 3: // Menu/Profile
