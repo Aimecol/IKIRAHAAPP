@@ -279,7 +279,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
             alignment: Alignment.center,
             children: [
               const Icon(
-                Icons.shopping_bag_outlined,
+                Icons.shopping_cart_outlined,
                 color: Colors.white,
                 size: 24,
               ),
@@ -312,7 +312,6 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: BottomNavigationWidget(
         currentIndex:
             -1, // No specific tab selected for restaurant detail screen
@@ -325,6 +324,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
         products: restaurantProducts,
         restaurants: const [],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
