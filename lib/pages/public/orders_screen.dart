@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ikirahaapp/widgets/bottom_navigation_widget.dart';
+import 'package:ikirahaapp/pages/public/cart_screen.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -126,7 +127,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       bottomNavigationBar: const BottomNavigationWidget(
         currentIndex: 2, // Orders tab is selected
       ),
-      floatingActionButton: Container(), // Empty container to hide default FAB
+      floatingActionButton: _buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
@@ -411,6 +412,55 @@ class _OrdersScreenState extends State<OrdersScreen> {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildFloatingActionButton() {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: const LinearGradient(
+          colors: [Colors.deepOrange, Colors.orange],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.deepOrange.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CartScreen(
+                cartItems: const [],
+                onCartUpdated: (updatedCart) {
+                  // Handle cart updates if needed
+                },
+              ),
+            ),
+          );
+        },
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: const Icon(
+          Icons.shopping_cart_outlined,
+          color: Colors.white,
+          size: 24,
+        ),
+      ),
     );
   }
 }
