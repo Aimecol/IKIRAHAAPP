@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ikirahaapp/widgets/bottom_navigation_widget.dart';
+import 'package:ikirahaapp/pages/public/cart_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -44,22 +46,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Profile Header
             _buildProfileHeader(),
             const SizedBox(height: 24),
-            
+
             // Profile Options
             _buildProfileOptions(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Account Settings
             _buildAccountSettings(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Logout Button
             _buildLogoutButton(),
           ],
         ),
       ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentIndex: 3, // Profile/Menu tab is selected
+      ),
+      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -83,11 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           CircleAvatar(
             radius: 50,
             backgroundColor: Colors.deepOrange.withValues(alpha: 0.1),
-            child: Icon(
-              Icons.person,
-              size: 60,
-              color: Colors.deepOrange,
-            ),
+            child: Icon(Icons.person, size: 60, color: Colors.deepOrange),
           ),
           const SizedBox(height: 16),
           Text(
@@ -256,11 +259,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           color: Colors.deepOrange.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(
-          icon,
-          color: Colors.deepOrange,
-          size: 24,
-        ),
+        child: Icon(icon, color: Colors.deepOrange, size: 24),
       ),
       title: Text(
         title,
@@ -313,10 +312,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         child: const Text(
           'Logout',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -328,7 +324,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Edit Profile'),
-          content: const Text('Profile editing functionality will be implemented here.'),
+          content: const Text(
+            'Profile editing functionality will be implemented here.',
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -338,7 +336,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Profile editing - Coming Soon!')),
+                  const SnackBar(
+                    content: Text('Profile editing - Coming Soon!'),
+                  ),
                 );
               },
               child: const Text('Save'),
@@ -406,6 +406,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildFloatingActionButton() {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: const LinearGradient(
+          colors: [Colors.deepOrange, Colors.orange],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.deepOrange.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CartScreen(
+                cartItems: const [],
+                onCartUpdated: (updatedCart) {
+                  // Handle cart updates if needed
+                },
+              ),
+            ),
+          );
+        },
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: const Icon(
+          Icons.shopping_cart_outlined,
+          color: Colors.white,
+          size: 24,
+        ),
+      ),
     );
   }
 }
