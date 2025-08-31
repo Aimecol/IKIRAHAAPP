@@ -1,0 +1,80 @@
+/* Local Icon Font - FontAwesome Alternative */
+
+/* Icon Base Styles */
+.fas, .far, .fab {
+  font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Pro', sans-serif;
+  font-weight: 900;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  display: inline-block;
+}
+
+.far {
+  font-weight: 400;
+}
+
+/* Icon Definitions using Unicode */
+.fa-bars::before { content: "\2630"; }
+.fa-search::before { content: "\1F50D"; }
+.fa-bell::before { content: "\1F514"; }
+.fa-user::before { content: "\1F464"; }
+.fa-cog::before { content: "\2699"; }
+.fa-sign-out-alt::before { content: "\27A4"; }
+.fa-chevron-down::before { content: "\25BC"; }
+.fa-chevron-left::before { content: "\25C0"; }
+.fa-chevron-right::before { content: "\25B6"; }
+.fa-home::before { content: "\1F3E0"; }
+.fa-tachometer-alt::before { content: "\1F4CA"; }
+.fa-users::before { content: "\1F465"; }
+.fa-store::before { content: "\1F3EA"; }
+.fa-box::before { content: "\1F4E6"; }
+.fa-shopping-cart::before { content: "\1F6D2"; }
+.fa-chart-bar::before { content: "\1F4CA"; }
+.fa-chart-line::before { content: "\1F4C8"; }
+.fa-credit-card::before { content: "\1F4B3"; }
+.fa-file-alt::before { content: "\1F4C4"; }
+.fa-dollar-sign::before { content: "\0024"; }
+.fa-star::before { content: "\2605"; }
+.fa-plus::before { content: "\002B"; }
+.fa-edit::before { content: "\270E"; }
+.fa-check::before { content: "\2713"; }
+.fa-clock::before { content: "\1F551"; }
+.fa-download::before { content: "\2B07"; }
+.fa-balance-scale::before { content: "\2696"; }
+.fa-list::before { content: "\1F4CB"; }
+.fa-piggy-bank::before { content: "\1F437"; }
+.fa-refresh::before { content: "\21BB"; }
+.fa-spinner::before { content: "\21BB"; }
+.fa-times::before { content: "\00D7"; }
+.fa-check-circle::before { content: "\2713"; }
+.fa-exclamation-circle::before { content: "\0021"; }
+.fa-info-circle::before { content: "\2139"; }
+.fa-sign-in-alt::before { content: "\27A4"; }
+
+/* Spinning animation for spinner */
+.fa-spin {
+  animation: fa-spin 2s infinite linear;
+}
+
+@keyframes fa-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Icon sizes */
+.fa-xs { font-size: 0.75em; }
+.fa-sm { font-size: 0.875em; }
+.fa-lg { font-size: 1.33333em; line-height: 0.75em; vertical-align: -0.0667em; }
+.fa-xl { font-size: 1.5em; line-height: 0.6667em; vertical-align: -0.075em; }
+.fa-2x { font-size: 2em; }
+.fa-3x { font-size: 3em; }
+
+/* Icon positioning */
+.fa-fw { text-align: center; width: 1.25em; }
+
+/* Fallback for missing icons */
+[class*="fa-"]:not([class*="fa-"]):before {
+  content: "\25A0"; /* Black square as fallback */
+}

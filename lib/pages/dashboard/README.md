@@ -15,18 +15,29 @@ A fully responsive, Apple-inspired dashboard/control panel built with pure HTML,
 
 ### Quick Start
 
-1. Open `login.html` in your browser
-2. Select a role (Super Admin, Merchant, or Accountant)
-3. Use the pre-filled credentials to log in
-4. Explore the dashboard features
+1. Open `login.html` in your browser (works with file:// protocol)
+2. Use any of the demo credentials below to log in
+3. The system will automatically detect your role and redirect to the appropriate dashboard
+4. Navigate through the dashboard using the sidebar (desktop) or bottom navigation (mobile)
+
+### Setup Instructions
+
+1. **No Server Required**: The dashboard works directly from the file system using the file:// protocol
+2. **Local Assets**: All CSS, JavaScript, and image assets are included locally
+3. **Cross-Platform**: Works on Windows, macOS, and Linux
+4. **Browser Compatibility**: Tested on Chrome, Firefox, Safari, and Edge
 
 ### Demo Credentials
 
-| Role | Email | Password |
-|------|-------|----------|
-| Super Admin | admin@ikiraha.com | admin123 |
-| Merchant | merchant@ikiraha.com | merchant123 |
-| Accountant | accountant@ikiraha.com | accountant123 |
+**Important**: These credentials are for testing purposes only. Use them to access different dashboard views.
+
+| Role | Email | Password | Access Level |
+|------|-------|----------|--------------|
+| Super Admin | admin@ikiraha.com | admin123 | Full system control, user management, merchant oversight |
+| Merchant | merchant@ikiraha.com | merchant123 | Product management, order processing, business analytics |
+| Accountant | accountant@ikiraha.com | accountant123 | Financial reports, transaction management, data export |
+
+**Note**: The system automatically detects user roles based on credentials - no manual role selection required.
 
 ### File Structure
 

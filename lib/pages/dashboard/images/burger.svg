@@ -1,0 +1,7 @@
+<svg width="80" height="80" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="40" cy="40" r="35" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+  <circle cx="40" cy="35" r="25" fill="#FFD700"/>
+  <rect x="20" y="45" width="40" height="8" fill="#228B22"/>
+  <rect x="25" y="50" width="30" height="6" fill="#FF6347"/>
+  <text x="40" y="70" text-anchor="middle" fill="#333" font-family="Arial" font-size="8">🍔</text>
+</svg>

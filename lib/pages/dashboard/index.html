@@ -8,8 +8,8 @@
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Local Icons -->
+    <link rel="stylesheet" href="css/icons.css">
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/variables.css">
@@ -73,8 +73,8 @@
 
                     <div class="profile-dropdown">
                         <button id="profile-btn" class="profile-button" aria-label="Profile menu">
-                            <div class="profile-avatar avatar-fallback">
-                                <i class="fas fa-user"></i>
+                            <div class="profile-avatar">
+                                <span class="avatar-initials">U</span>
                             </div>
                             <span class="profile-name">John Doe</span>
                             <i class="fas fa-chevron-down profile-chevron"></i>
@@ -120,119 +120,4 @@
     <script type="module" src="js/app.js"></script>
 </body>
 </html>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ikiraha Dashboard</title>
 
-    <!-- Preconnect for performance -->
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/pages.css">
-    <link rel="stylesheet" href="css/responsive.css">
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../web/favicon.png">
-
-    <!-- Prefers reduced motion -->
-    <style>
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-    </style>
-</head>
-<body class="dashboard-body">
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen">
-        <div class="loading-spinner"></div>
-        <p>Loading Dashboard...</p>
-    </div>
-
-    <!-- Main App Container -->
-    <div id="app" class="app-container" style="display: none;">
-        <!-- Navigation will be injected here -->
-        <nav id="navigation-container"></nav>
-
-        <!-- Main Content Area -->
-        <main id="main-content" class="main-content">
-            <!-- Top Bar -->
-            <header id="top-bar" class="top-bar">
-                <div class="top-bar-left">
-                    <button id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <div id="breadcrumbs" class="breadcrumbs">
-                        <span class="breadcrumb-item">Dashboard</span>
-                    </div>
-                </div>
-
-                <div class="top-bar-center">
-                    <div class="search-container">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="search" id="global-search" placeholder="Search..." class="search-input">
-                    </div>
-                </div>
-
-                <div class="top-bar-right">
-                    <button id="notifications-btn" class="icon-button" aria-label="Notifications">
-                        <i class="fas fa-bell"></i>
-                        <span id="notification-badge" class="notification-badge">3</span>
-                    </button>
-
-                    <div class="profile-dropdown">
-                        <button id="profile-btn" class="profile-button" aria-label="Profile menu">
-                            <img src="https://via.placeholder.com/32x32/007AFF/FFFFFF?text=U" alt="Profile" class="profile-avatar">
-                            <span class="profile-name">John Doe</span>
-                            <i class="fas fa-chevron-down profile-chevron"></i>
-                        </button>
-                        <div id="profile-menu" class="profile-menu">
-                            <a href="#" class="profile-menu-item">
-                                <i class="fas fa-user"></i>
-                                Profile
-                            </a>
-                            <a href="#" class="profile-menu-item">
-                                <i class="fas fa-cog"></i>
-                                Settings
-                            </a>
-                            <hr class="profile-menu-divider">
-                            <a href="#" class="profile-menu-item">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Sign Out
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Page Content -->
-            <div id="page-content" class="page-content">
-                <!-- Content will be dynamically loaded here -->
-            </div>
-        </main>
-
-        <!-- Mobile Bottom Navigation -->
-        <nav id="mobile-nav" class="mobile-nav">
-            <!-- Mobile nav will be injected here -->
-        </nav>
-    </div>
-
-    <!-- Notification Toast Container -->
-    <div id="toast-container" class="toast-container"></div>
-
-    <!-- Modal Container -->
-    <div id="modal-container" class="modal-container"></div>
-
-    <!-- Scripts -->
-    <script type="module" src="js/app.js"></script>
-</body>
-</html>
