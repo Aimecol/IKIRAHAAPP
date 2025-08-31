@@ -36,111 +36,116 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Cart FAB
-        Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: [Colors.deepOrange, Colors.orange],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+    return BottomAppBar(
+      height: 70,
+      color: const Color.fromARGB(
+        255,
+        201,
+        196,
+        196,
+      ), // ✅ Apply color here instead of Container
+      elevation: 8, // ✅ Let BottomAppBar handle shadow
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 4.0,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavBarItem(Icons.home_outlined, Icons.home, 'Home', 0),
+            _buildNavBarItem(Icons.search_outlined, Icons.search, 'Search', 1),
+            const SizedBox(width: 40), // Space for the center FAB
+            _buildNavBarItem(
+              Icons.receipt_long_outlined,
+              Icons.receipt_long,
+              'Orders',
+              2,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.deepOrange.withValues(alpha: 0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 6),
-              ),
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            _buildNavBarItem(Icons.menu_outlined, Icons.menu, 'Menu', 3),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget buildFloatingActionButton(
+    BuildContext context, {
+    List<Map<String, dynamic>>? cartItems,
+    Function(List<Map<String, dynamic>>)? onCartUpdated,
+  }) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: const LinearGradient(
+          colors: [Colors.deepOrange, Colors.orange],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.deepOrange.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CartScreen(
-                    cartItems: widget.cartItems ?? [],
-                    onCartUpdated: widget.onCartUpdated ?? (items) {},
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CartScreen(
+                cartItems: cartItems ?? [],
+                onCartUpdated: onCartUpdated ?? (items) {},
+              ),
+            ),
+          );
+        },
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            const Icon(
+              Icons.shopping_cart_outlined,
+              color: Colors.white,
+              size: 24,
+            ),
+            if (cartItems != null && cartItems.isNotEmpty)
+              Positioned(
+                right: 8,
+                top: 8,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
                   ),
-                ),
-              );
-            },
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            child: Stack(
-              children: [
-                const Icon(
-                  Icons.shopping_cart_outlined,
-                  color: Colors.white,
-                  size: 24,
-                ),
-                if (widget.cartItems != null && widget.cartItems!.isNotEmpty)
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 16,
-                        minHeight: 16,
-                      ),
-                      child: Text(
-                        '${widget.cartItems!.length}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                  constraints: const BoxConstraints(
+                    minWidth: 16,
+                    minHeight: 16,
+                  ),
+                  child: Text(
+                    cartItems.length.toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        // Bottom Navigation Bar
-        BottomAppBar(
-          height: 70,
-          color: const Color.fromARGB(255, 201, 196, 196),
-          elevation: 8,
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 4.0,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavBarItem(Icons.home_outlined, Icons.home, 'Home', 0),
-                _buildNavBarItem(Icons.search_outlined, Icons.search, 'Search', 1),
-                const SizedBox(width: 40), // Space for the center FAB
-                _buildNavBarItem(
-                  Icons.receipt_long_outlined,
-                  Icons.receipt_long,
-                  'Orders',
-                  2,
                 ),
-                _buildNavBarItem(Icons.menu_outlined, Icons.menu, 'Menu', 3),
-              ],
-            ),
-          ),
+              ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -193,23 +198,27 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              isSelected ? filledIcon : outlinedIcon,
-              color: isSelected ? Colors.deepOrange : Colors.grey[600],
-              size: 24,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                isSelected ? filledIcon : outlinedIcon,
+                key: ValueKey(isSelected),
+                color: isSelected ? Colors.deepOrange : Colors.grey[600],
+                size: 24,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
-                fontSize: 12,
                 color: isSelected ? Colors.deepOrange : Colors.grey[600],
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                fontFamily: 'Poppins',
+                fontSize: 11,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                letterSpacing: -0.2,
               ),
             ),
           ],
