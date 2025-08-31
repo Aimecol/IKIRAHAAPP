@@ -133,93 +133,91 @@
         </div>
     </div>
 
+    <!-- Dashboard Configuration -->
+    <script src="js/dashboard-config.js"></script>
+
+    <!-- API Service -->
+    <script src="js/api-service.js"></script>
+
     <script>
-        // Authentication Manager - Handle user authentication and roles
+        // Authentication Manager - Handle user authentication with real API
         class AuthManager {
           constructor() {
+            this.api = new ApiService();
             this.currentUser = null;
             this.currentRole = null;
             this.isAuthenticated = false;
-            this.mockUsers = this.getMockUsers();
-          }
-
-          getMockUsers() {
-            return [
-              {
-                id: 1,
-                email: 'admin@ikiraha.com',
-                password: 'admin123',
-                name: 'Super Admin',
-                role: 'super_admin',
-                permissions: ['all']
-              },
-              {
-                id: 2,
-                email: 'merchant@ikiraha.com',
-                password: 'merchant123',
-                name: 'Restaurant Owner',
-                role: 'merchant',
-                permissions: ['products', 'orders', 'analytics', 'profile']
-              },
-              {
-                id: 3,
-                email: 'accountant@ikiraha.com',
-                password: 'accountant123',
-                name: 'Financial Manager',
-                role: 'accountant',
-                permissions: ['transactions', 'reports', 'analytics', 'profile']
-              }
-            ];
           }
 
           async checkAuth() {
-            const storedUser = localStorage.getItem('dashboard-user');
-            const storedRole = localStorage.getItem('dashboard-role');
+            if (!this.api.isAuthenticated()) {
+              return false;
+            }
 
-            if (storedUser && storedRole) {
-              try {
-                this.currentUser = JSON.parse(storedUser);
-                this.currentRole = storedRole;
+            try {
+              const response = await this.api.getProfile();
+              if (response.success) {
+                this.currentUser = response.data.user;
+                this.currentRole = response.data.user.role;
                 this.isAuthenticated = true;
                 return true;
-              } catch (error) {
-                console.error('Error parsing stored user:', error);
-                this.clearAuth();
-                return false;
               }
+            } catch (error) {
+              console.error('Auth check failed:', error);
+              this.clearAuth();
             }
+
             return false;
           }
 
           async login(email, password) {
-            const user = this.mockUsers.find(u => u.email === email && u.password === password);
+            try {
+              const response = await this.api.login(email, password);
 
-            if (user) {
-              const { password: _, ...userWithoutPassword } = user;
-              this.currentUser = userWithoutPassword;
-              this.currentRole = user.role;
-              this.isAuthenticated = true;
+              if (response.success) {
+                this.currentUser = response.data.user;
+                this.currentRole = response.data.user.role;
+                this.isAuthenticated = true;
 
-              localStorage.setItem('dashboard-user', JSON.stringify(userWithoutPassword));
-              localStorage.setItem('dashboard-role', user.role);
+                // Store user data for dashboard use
+                localStorage.setItem('dashboard-user', JSON.stringify(response.data.user));
+                localStorage.setItem('dashboard-role', response.data.user.role);
 
+                return {
+                  success: true,
+                  user: response.data.user,
+                  role: response.data.user.role
+                };
+              } else {
+                return {
+                  success: false,
+                  error: response.message || 'Login failed'
+                };
+              }
+            } catch (error) {
+              console.error('Login error:', error);
               return {
-                success: true,
-                user: userWithoutPassword,
-                role: user.role
+                success: false,
+                error: error.message || 'Network error. Please check your connection.'
               };
             }
+          }
 
-            return {
-              success: false,
-              error: 'Invalid email or password'
-            };
+          async logout() {
+            try {
+              await this.api.logout();
+            } catch (error) {
+              console.error('Logout error:', error);
+            } finally {
+              this.clearAuth();
+            }
           }
 
           clearAuth() {
             this.currentUser = null;
             this.currentRole = null;
             this.isAuthenticated = false;
+            this.api.clearTokens();
             localStorage.removeItem('dashboard-user');
             localStorage.removeItem('dashboard-role');
           }
