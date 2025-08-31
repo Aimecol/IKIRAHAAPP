@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ikirahaapp/pages/public/product_details_screen.dart';
 import 'package:ikirahaapp/pages/public/restaurant_detail_screen.dart';
 import 'package:ikirahaapp/widgets/product_card.dart';
+import 'package:ikirahaapp/widgets/bottom_navigation_widget.dart';
+import 'package:ikirahaapp/pages/public/cart_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   final List<Map<String, dynamic>> products;
@@ -209,6 +211,11 @@ class _SearchScreenState extends State<SearchScreen>
           ),
         ],
       ),
+      bottomNavigationBar: const BottomNavigationWidget(
+        currentIndex: 1, // Search tab is selected
+      ),
+      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -548,6 +555,55 @@ class _SearchScreenState extends State<SearchScreen>
           ],
         ),
         onTap: () => _onRestaurantTap(restaurant),
+      ),
+    );
+  }
+
+  Widget _buildFloatingActionButton() {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: const LinearGradient(
+          colors: [Colors.deepOrange, Colors.orange],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.deepOrange.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CartScreen(
+                cartItems: const [],
+                onCartUpdated: (updatedCart) {
+                  // Handle cart updates if needed
+                },
+              ),
+            ),
+          );
+        },
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: const Icon(
+          Icons.shopping_cart_outlined,
+          color: Colors.white,
+          size: 24,
+        ),
       ),
     );
   }
