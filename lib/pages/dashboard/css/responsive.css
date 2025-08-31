@@ -1,0 +1,273 @@
+/* Responsive Design - Mobile-first approach */
+
+/* Tablet and below (768px and down) */
+@media (max-width: 768px) {
+  /* Hide desktop sidebar */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Adjust main content */
+  .main-content {
+    margin-left: 0;
+  }
+
+  /* Show mobile navigation toggle */
+  .nav-toggle {
+    display: block;
+  }
+
+  /* Show mobile bottom navigation */
+  .mobile-nav {
+    display: block;
+  }
+
+  /* Adjust page content for mobile nav */
+  .page-content {
+    padding-bottom: calc(var(--mobile-nav-height) + var(--space-6));
+  }
+
+  /* Adjust top bar for mobile */
+  .top-bar {
+    padding: 0 var(--space-4);
+  }
+
+  .top-bar-center {
+    display: none;
+  }
+
+  /* Adjust search input */
+  .search-input {
+    width: 200px;
+  }
+
+  .search-input:focus {
+    width: 250px;
+  }
+
+  /* Stack profile info vertically on small screens */
+  .profile-name {
+    display: none;
+  }
+
+  /* Adjust cards for mobile */
+  .card {
+    margin-bottom: var(--space-4);
+  }
+
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding: var(--space-4);
+  }
+
+  /* Adjust modals for mobile */
+  .modal {
+    padding: var(--space-4);
+    align-items: flex-end;
+  }
+
+  .modal-content {
+    max-height: 80vh;
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  }
+
+  /* Adjust toast notifications */
+  .toast-container {
+    top: var(--space-4);
+    right: var(--space-4);
+    left: var(--space-4);
+    max-width: none;
+  }
+
+  /* Adjust table for mobile */
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 600px;
+  }
+
+  /* Adjust form elements */
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+/* Mobile phones (480px and down) */
+@media (max-width: 480px) {
+  /* Further reduce padding */
+  .page-content {
+    padding: var(--space-4);
+  }
+
+  .top-bar {
+    padding: 0 var(--space-3);
+  }
+
+  /* Hide breadcrumbs on very small screens */
+  .breadcrumbs {
+    display: none;
+  }
+
+  /* Adjust button sizes */
+  .btn {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+  }
+
+  .btn-sm {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-xs);
+  }
+
+  /* Stack modal footer buttons */
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+
+  /* Adjust card spacing */
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding: var(--space-3);
+  }
+
+  /* Hide search on very small screens */
+  .search-container {
+    display: none;
+  }
+
+  /* Adjust profile dropdown */
+  .profile-menu {
+    right: var(--space-3);
+    left: var(--space-3);
+    min-width: auto;
+  }
+}
+
+/* Large tablets and small desktops (769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Slightly reduce sidebar width */
+  :root {
+    --sidebar-width: 240px;
+    --sidebar-width-collapsed: 70px;
+  }
+
+  /* Adjust search input */
+  .search-input {
+    width: 250px;
+  }
+
+  .search-input:focus {
+    width: 350px;
+  }
+
+  /* Adjust page content padding */
+  .page-content {
+    padding: var(--space-5);
+  }
+}
+
+/* Large desktops (1200px and up) */
+@media (min-width: 1200px) {
+  /* Increase sidebar width for better proportions */
+  :root {
+    --sidebar-width: 320px;
+  }
+
+  /* Larger search input */
+  .search-input {
+    width: 350px;
+  }
+
+  .search-input:focus {
+    width: 450px;
+  }
+
+  /* More generous page content padding */
+  .page-content {
+    padding: var(--space-8);
+  }
+
+  /* Larger cards */
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding: var(--space-8);
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Ensure crisp rendering on high DPI displays */
+  .sidebar-logo,
+  .profile-avatar,
+  .avatar {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  /* Reduce top bar height on landscape mobile */
+  :root {
+    --topbar-height: 56px;
+  }
+
+  /* Reduce mobile nav height */
+  :root {
+    --mobile-nav-height: 60px;
+  }
+
+  /* Adjust sidebar header */
+  .sidebar-header {
+    padding: var(--space-4) var(--space-6);
+  }
+}
+
+/* Print styles */
+@media print {
+  /* Hide navigation and interactive elements */
+  .sidebar,
+  .mobile-nav,
+  .top-bar,
+  .toast-container,
+  .modal-container {
+    display: none !important;
+  }
+
+  /* Adjust main content for print */
+  .main-content {
+    margin-left: 0 !important;
+  }
+
+  .page-content {
+    padding: 0 !important;
+  }
+
+  /* Ensure good contrast for print */
+  .card {
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+  }
+
+  /* Remove background colors */
+  * {
+    background-color: transparent !important;
+    color: #000 !important;
+  }
+}

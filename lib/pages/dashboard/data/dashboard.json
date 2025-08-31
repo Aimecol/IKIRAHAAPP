@@ -1,0 +1,245 @@
+{
+  "kpis": {
+    "super_admin": [
+      {
+        "id": "total_orders",
+        "title": "Total Orders",
+        "value": "1,234",
+        "change": "+12%",
+        "changeType": "positive",
+        "icon": "fas fa-shopping-cart",
+        "color": "primary"
+      },
+      {
+        "id": "revenue",
+        "title": "Revenue",
+        "value": "$45,678",
+        "change": "+8%",
+        "changeType": "positive",
+        "icon": "fas fa-dollar-sign",
+        "color": "success"
+      },
+      {
+        "id": "active_merchants",
+        "title": "Active Merchants",
+        "value": "567",
+        "change": "-2%",
+        "changeType": "negative",
+        "icon": "fas fa-store",
+        "color": "warning"
+      },
+      {
+        "id": "pending_tasks",
+        "title": "Pending Tasks",
+        "value": "23",
+        "change": "0%",
+        "changeType": "neutral",
+        "icon": "fas fa-clock",
+        "color": "info"
+      }
+    ],
+    "merchant": [
+      {
+        "id": "my_orders",
+        "title": "My Orders",
+        "value": "89",
+        "change": "+15%",
+        "changeType": "positive",
+        "icon": "fas fa-shopping-cart",
+        "color": "primary"
+      },
+      {
+        "id": "my_revenue",
+        "title": "My Revenue",
+        "value": "$3,456",
+        "change": "+22%",
+        "changeType": "positive",
+        "icon": "fas fa-dollar-sign",
+        "color": "success"
+      },
+      {
+        "id": "my_products",
+        "title": "Products",
+        "value": "45",
+        "change": "+3",
+        "changeType": "positive",
+        "icon": "fas fa-box",
+        "color": "info"
+      },
+      {
+        "id": "avg_rating",
+        "title": "Avg Rating",
+        "value": "4.8",
+        "change": "+0.2",
+        "changeType": "positive",
+        "icon": "fas fa-star",
+        "color": "warning"
+      }
+    ],
+    "accountant": [
+      {
+        "id": "total_transactions",
+        "title": "Transactions",
+        "value": "2,345",
+        "change": "+18%",
+        "changeType": "positive",
+        "icon": "fas fa-credit-card",
+        "color": "primary"
+      },
+      {
+        "id": "total_revenue",
+        "title": "Total Revenue",
+        "value": "$78,901",
+        "change": "+12%",
+        "changeType": "positive",
+        "icon": "fas fa-chart-line",
+        "color": "success"
+      },
+      {
+        "id": "pending_payments",
+        "title": "Pending Payments",
+        "value": "$5,432",
+        "change": "-8%",
+        "changeType": "negative",
+        "icon": "fas fa-clock",
+        "color": "warning"
+      },
+      {
+        "id": "monthly_profit",
+        "title": "Monthly Profit",
+        "value": "$12,345",
+        "change": "+25%",
+        "changeType": "positive",
+        "icon": "fas fa-piggy-bank",
+        "color": "info"
+      }
+    ]
+  },
+  "recentActivity": [
+    {
+      "id": 1,
+      "type": "order",
+      "title": "New order received",
+      "description": "Order #1234 from John Doe",
+      "timestamp": "2025-08-31T04:35:00Z",
+      "icon": "fas fa-plus",
+      "color": "success"
+    },
+    {
+      "id": 2,
+      "type": "user",
+      "title": "New user registered",
+      "description": "Jane Smith joined as merchant",
+      "timestamp": "2025-08-31T04:20:00Z",
+      "icon": "fas fa-user",
+      "color": "info"
+    },
+    {
+      "id": 3,
+      "type": "order",
+      "title": "Order completed",
+      "description": "Order #1230 delivered successfully",
+      "timestamp": "2025-08-31T03:35:00Z",
+      "icon": "fas fa-check",
+      "color": "primary"
+    },
+    {
+      "id": 4,
+      "type": "payment",
+      "title": "Payment processed",
+      "description": "$234.50 payment confirmed",
+      "timestamp": "2025-08-31T03:15:00Z",
+      "icon": "fas fa-credit-card",
+      "color": "success"
+    },
+    {
+      "id": 5,
+      "type": "product",
+      "title": "Product updated",
+      "description": "Burger Special price changed",
+      "timestamp": "2025-08-31T02:45:00Z",
+      "icon": "fas fa-edit",
+      "color": "warning"
+    }
+  ],
+  "quickActions": {
+    "super_admin": [
+      {
+        "id": "add_merchant",
+        "title": "Add Merchant",
+        "description": "Register new restaurant",
+        "icon": "fas fa-plus",
+        "action": "addMerchant",
+        "color": "primary"
+      },
+      {
+        "id": "view_reports",
+        "title": "View Reports",
+        "description": "System analytics",
+        "icon": "fas fa-chart-bar",
+        "action": "viewReports",
+        "color": "secondary"
+      },
+      {
+        "id": "manage_users",
+        "title": "Manage Users",
+        "description": "User administration",
+        "icon": "fas fa-users",
+        "action": "manageUsers",
+        "color": "secondary"
+      }
+    ],
+    "merchant": [
+      {
+        "id": "add_product",
+        "title": "Add Product",
+        "description": "Create new menu item",
+        "icon": "fas fa-plus",
+        "action": "addProduct",
+        "color": "primary"
+      },
+      {
+        "id": "view_orders",
+        "title": "View Orders",
+        "description": "Check pending orders",
+        "icon": "fas fa-list",
+        "action": "viewOrders",
+        "color": "secondary"
+      },
+      {
+        "id": "view_analytics",
+        "title": "View Analytics",
+        "description": "Business insights",
+        "icon": "fas fa-chart-line",
+        "action": "viewAnalytics",
+        "color": "secondary"
+      }
+    ],
+    "accountant": [
+      {
+        "id": "export_transactions",
+        "title": "Export Data",
+        "description": "Download CSV report",
+        "icon": "fas fa-download",
+        "action": "exportTransactions",
+        "color": "primary"
+      },
+      {
+        "id": "view_reports",
+        "title": "Financial Reports",
+        "description": "Monthly summaries",
+        "icon": "fas fa-file-alt",
+        "action": "viewReports",
+        "color": "secondary"
+      },
+      {
+        "id": "reconcile_accounts",
+        "title": "Reconcile",
+        "description": "Account reconciliation",
+        "icon": "fas fa-balance-scale",
+        "action": "reconcileAccounts",
+        "color": "secondary"
+      }
+    ]
+  }
+}
