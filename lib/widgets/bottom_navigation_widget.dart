@@ -198,7 +198,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -208,15 +208,15 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                 isSelected ? filledIcon : outlinedIcon,
                 key: ValueKey(isSelected),
                 color: isSelected ? Colors.deepOrange : Colors.grey[600],
-                size: 24,
+                size: 22,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 1),
             Text(
               label,
               style: TextStyle(
                 color: isSelected ? Colors.deepOrange : Colors.grey[600],
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 letterSpacing: -0.2,
               ),
