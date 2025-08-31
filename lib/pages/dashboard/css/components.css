@@ -1,6 +1,6 @@
 /* Reusable UI Components - Apple-inspired */
 
-/* Buttons */
+/* Buttons - Apple-inspired */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -11,12 +11,14 @@
   font-weight: var(--font-weight-medium);
   line-height: 1;
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   cursor: pointer;
   transition: all var(--transition-fast);
   text-decoration: none;
   white-space: nowrap;
   user-select: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn:disabled {
@@ -27,12 +29,18 @@
 .btn-primary {
   background-color: var(--color-primary);
   color: var(--text-inverse);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover:not(:disabled) {
   background-color: var(--color-primary-hover);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary {
@@ -75,7 +83,7 @@
   width: 40px;
   height: 40px;
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-full);
   background-color: transparent;
   color: var(--text-secondary);
   cursor: pointer;
@@ -86,6 +94,11 @@
 .icon-button:hover {
   background-color: var(--bg-tertiary);
   color: var(--text-primary);
+  transform: scale(1.05);
+}
+
+.icon-button:active {
+  transform: scale(0.95);
 }
 
 .icon-button:focus {
@@ -93,7 +106,7 @@
   outline-offset: 2px;
 }
 
-/* Cards */
+/* Cards - Apple-inspired */
 .card {
   background-color: var(--bg-elevated);
   border-radius: var(--radius-2xl);
@@ -101,16 +114,19 @@
   border: 1px solid var(--border-light);
   transition: all var(--transition-normal);
   overflow: hidden;
+  backdrop-filter: var(--blur-sm);
 }
 
 .card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+  border-color: var(--border-medium);
 }
 
 .card-header {
   padding: var(--space-6);
   border-bottom: 1px solid var(--border-light);
+  background-color: var(--bg-primary);
 }
 
 .card-body {
@@ -265,6 +281,8 @@
   align-items: center;
   justify-content: center;
   border: 2px solid var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
+  line-height: 1;
 }
 
 /* Avatar */

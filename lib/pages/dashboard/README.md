@@ -91,7 +91,7 @@ dashboard/
 ### Design System
 
 The dashboard uses a comprehensive design system with:
-- **Colors**: Apple-inspired color palette with primary blue (#007AFF)
+- **Colors**: Apple-inspired color palette with primary deep orange (#FF5722) matching the mobile app
 - **Typography**: System fonts with clear hierarchy
 - **Spacing**: Consistent 4px base unit scaling
 - **Shadows**: Subtle depth with multiple shadow levels

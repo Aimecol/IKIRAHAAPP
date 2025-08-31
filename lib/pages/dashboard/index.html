@@ -450,12 +450,13 @@
           }
         }
 
-        // Simplified Navigation
+        // Enhanced Navigation Component
         class NavigationComponent {
           constructor() {
             this.currentRole = localStorage.getItem('dashboard-role') || 'merchant';
-            this.isCollapsed = false;
+            this.isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
             this.isMobile = window.innerWidth <= 768;
+            this.mobileMenuOpen = false;
           }
 
           getNavigationItems() {
@@ -489,6 +490,8 @@
             this.renderDesktopNavigation();
             this.renderMobileNavigation();
             this.setupEventListeners();
+            this.updateActiveRoute();
+            this.handleResize();
           }
 
           renderDesktopNavigation() {
@@ -496,16 +499,22 @@
             const navHTML = `
               <aside class="sidebar ${this.isCollapsed ? 'collapsed' : ''}">
                 <div class="sidebar-header">
-                  <div class="sidebar-logo">
-                    <span class="logo-text">Ikiraha</span>
-                  </div>
+                  <div class="sidebar-logo">I</div>
+                  <div class="sidebar-title">Ikiraha</div>
+                  <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+                    <i class="fas fa-chevron-left"></i>
+                  </button>
                 </div>
                 <nav class="sidebar-nav">
                   ${navItems.map(item => `
-                    <a href="${item.href}" class="nav-item" data-route="${item.id}">
-                      <i class="${item.icon}"></i>
-                      <span class="nav-label">${item.label}</span>
-                    </a>
+                    <div class="nav-item">
+                      <a href="${item.href}" class="nav-link" data-route="${item.id}">
+                        <div class="nav-icon">
+                          <i class="${item.icon}"></i>
+                        </div>
+                        <span class="nav-text">${item.label}</span>
+                      </a>
+                    </div>
                   `).join('')}
                 </nav>
               </aside>
@@ -518,10 +527,12 @@
           renderMobileNavigation() {
             const navItems = this.getNavigationItems().slice(0, 5); // Show only main items on mobile
             const navHTML = `
-              <div class="mobile-nav-items">
+              <div class="mobile-nav-container">
                 ${navItems.map(item => `
                   <a href="${item.href}" class="mobile-nav-item" data-route="${item.id}">
-                    <i class="${item.icon}"></i>
+                    <div class="mobile-nav-icon">
+                      <i class="${item.icon}"></i>
+                    </div>
                     <span>${item.label}</span>
                   </a>
                 `).join('')}
@@ -533,51 +544,195 @@
           }
 
           setupEventListeners() {
-            // Handle navigation toggle
+            // Desktop sidebar toggle
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            if (sidebarToggle) {
+              sidebarToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleSidebar();
+              });
+            }
+
+            // Mobile hamburger menu toggle
             const navToggle = document.getElementById('nav-toggle');
             if (navToggle) {
-              navToggle.addEventListener('click', () => this.toggleSidebar());
+              navToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleMobileMenu();
+              });
             }
+
+            // Navigation links
+            this.setupNavigationLinks();
 
             // Handle resize
             window.addEventListener('resize', () => this.handleResize());
-            this.handleResize();
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+              if (this.isMobile && this.mobileMenuOpen && !e.target.closest('.sidebar') && !e.target.closest('.nav-toggle')) {
+                this.closeMobileMenu();
+              }
+            });
+          }
+
+          setupNavigationLinks() {
+            // Desktop navigation links
+            document.querySelectorAll('.nav-link[data-route]').forEach(link => {
+              link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const route = e.currentTarget.getAttribute('data-route');
+                this.navigateToRoute(route);
+                if (this.isMobile) {
+                  this.closeMobileMenu();
+                }
+              });
+            });
+
+            // Mobile navigation links
+            document.querySelectorAll('.mobile-nav-item[data-route]').forEach(link => {
+              link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const route = e.currentTarget.getAttribute('data-route');
+                this.navigateToRoute(route);
+              });
+            });
           }
 
           toggleSidebar() {
-            this.isCollapsed = !this.isCollapsed;
-            const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
+            if (this.isMobile) {
+              this.toggleMobileMenu();
+            } else {
+              this.isCollapsed = !this.isCollapsed;
+              localStorage.setItem('sidebar-collapsed', this.isCollapsed.toString());
 
-            if (sidebar) {
-              sidebar.classList.toggle('collapsed', this.isCollapsed);
-            }
+              const sidebar = document.querySelector('.sidebar');
+              const mainContent = document.querySelector('.main-content');
+              const toggleIcon = document.querySelector('#sidebar-toggle i');
 
-            if (mainContent && !this.isMobile) {
-              mainContent.style.marginLeft = this.isCollapsed ? '80px' : '280px';
+              if (sidebar) {
+                sidebar.classList.toggle('collapsed', this.isCollapsed);
+              }
+
+              if (mainContent) {
+                mainContent.style.marginLeft = this.isCollapsed ? '80px' : '280px';
+                mainContent.classList.toggle('sidebar-collapsed', this.isCollapsed);
+              }
+
+              if (toggleIcon) {
+                toggleIcon.className = this.isCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+              }
             }
           }
 
+          toggleMobileMenu() {
+            this.mobileMenuOpen = !this.mobileMenuOpen;
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.mobile-overlay') || this.createMobileOverlay();
+
+            if (sidebar) {
+              sidebar.classList.toggle('mobile-open', this.mobileMenuOpen);
+            }
+
+            if (this.mobileMenuOpen) {
+              document.body.appendChild(overlay);
+              document.body.style.overflow = 'hidden';
+            } else {
+              if (overlay.parentNode) {
+                overlay.parentNode.removeChild(overlay);
+              }
+              document.body.style.overflow = '';
+            }
+          }
+
+          closeMobileMenu() {
+            this.mobileMenuOpen = false;
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.mobile-overlay');
+
+            if (sidebar) {
+              sidebar.classList.remove('mobile-open');
+            }
+
+            if (overlay && overlay.parentNode) {
+              overlay.parentNode.removeChild(overlay);
+            }
+
+            document.body.style.overflow = '';
+          }
+
+          createMobileOverlay() {
+            const overlay = document.createElement('div');
+            overlay.className = 'mobile-overlay';
+            overlay.addEventListener('click', () => this.closeMobileMenu());
+            return overlay;
+          }
+
+          navigateToRoute(route) {
+            // Update active states
+            this.updateActiveRoute(route);
+
+            // Trigger route change
+            if (window.app && window.app.router) {
+              window.app.router.navigate(route);
+            } else {
+              window.location.hash = route;
+            }
+          }
+
+          updateActiveRoute(route = null) {
+            const currentRoute = route || window.location.hash.slice(1) || 'dashboard';
+
+            // Update active states in both desktop and mobile navigation
+            document.querySelectorAll('.nav-link, .mobile-nav-item').forEach(item => {
+              const itemRoute = item.getAttribute('data-route');
+              if (itemRoute === currentRoute) {
+                item.classList.add('active');
+              } else {
+                item.classList.remove('active');
+              }
+            });
+          }
+
           handleResize() {
-            const isMobile = window.innerWidth <= 768;
-            this.isMobile = isMobile;
+            const wasMobile = this.isMobile;
+            this.isMobile = window.innerWidth <= 768;
+
             const sidebar = document.querySelector('.sidebar');
             const mobileNav = document.querySelector('.mobile-nav');
             const mainContent = document.querySelector('.main-content');
 
-            if (isMobile) {
-              if (sidebar) sidebar.style.display = 'none';
+            if (this.isMobile) {
+              // Mobile layout
+              if (sidebar) {
+                sidebar.style.display = 'flex';
+                sidebar.classList.remove('collapsed');
+                if (!this.mobileMenuOpen) {
+                  sidebar.classList.remove('mobile-open');
+                }
+              }
               if (mobileNav) mobileNav.style.display = 'flex';
               if (mainContent) {
                 mainContent.style.marginLeft = '0';
-                mainContent.style.paddingBottom = '80px';
+                mainContent.style.paddingBottom = 'var(--mobile-nav-height)';
               }
             } else {
-              if (sidebar) sidebar.style.display = 'flex';
+              // Desktop layout
+              if (sidebar) {
+                sidebar.style.display = 'flex';
+                sidebar.classList.remove('mobile-open');
+                sidebar.classList.toggle('collapsed', this.isCollapsed);
+              }
               if (mobileNav) mobileNav.style.display = 'none';
               if (mainContent) {
                 mainContent.style.marginLeft = this.isCollapsed ? '80px' : '280px';
                 mainContent.style.paddingBottom = '0';
+                mainContent.classList.toggle('sidebar-collapsed', this.isCollapsed);
+              }
+
+              // Close mobile menu if switching from mobile to desktop
+              if (wasMobile && this.mobileMenuOpen) {
+                this.closeMobileMenu();
               }
             }
           }
@@ -614,13 +769,16 @@
             this.setupRoutes();
 
             // Initialize components
-            await this.navigation.render();
+            this.navigation.render();
 
             // Hide loading screen and show app
             this.hideLoadingScreen();
 
             // Setup global event listeners
             this.setupEventListeners();
+
+            // Update profile info in top bar
+            this.updateProfileInfo();
           }
 
           setupRoutes() {
@@ -671,6 +829,20 @@
                 this.logout();
               }
             });
+          }
+
+          updateProfileInfo() {
+            const profileName = document.querySelector('.profile-name');
+            const avatarInitials = document.querySelector('.avatar-initials');
+
+            if (profileName && this.currentUser) {
+              profileName.textContent = this.currentUser.name;
+            }
+
+            if (avatarInitials && this.currentUser) {
+              const initials = this.currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+              avatarInitials.textContent = initials;
+            }
           }
 
           logout() {

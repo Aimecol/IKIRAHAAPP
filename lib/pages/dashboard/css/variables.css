@@ -1,12 +1,12 @@
 /* Apple-inspired Design System Variables */
 
 :root {
-  /* Colors - Light Mode */
-  --color-primary: #007AFF;
-  --color-primary-hover: #0056CC;
-  --color-primary-light: #E3F2FD;
+  /* Colors - Light Mode - Matching Mobile App */
+  --color-primary: #FF5722;
+  --color-primary-hover: #E64A19;
+  --color-primary-light: #FFF3E0;
 
-  --color-secondary: #5856D6;
+  --color-secondary: #FF9800;
   --color-success: #34C759;
   --color-warning: #FF9500;
   --color-danger: #FF3B30;
@@ -121,6 +121,9 @@
   --topbar-height: 64px;
   --mobile-nav-height: 80px;
 
+  /* Mobile App Specific Colors */
+  --mobile-nav-bg: #C9C4C4;
+
   /* Blur Effects */
   --blur-sm: blur(4px);
   --blur-md: blur(8px);
@@ -130,10 +133,10 @@
 /* Dark Mode Variables */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Dark Mode Colors */
-    --color-primary: #0A84FF;
-    --color-primary-hover: #409CFF;
-    --color-primary-light: #1E3A8A;
+    /* Dark Mode Colors - Matching Mobile App */
+    --color-primary: #FF7043;
+    --color-primary-hover: #FF5722;
+    --color-primary-light: #3E2723;
 
     /* Background Colors - Dark */
     --bg-primary: var(--color-gray-900);
