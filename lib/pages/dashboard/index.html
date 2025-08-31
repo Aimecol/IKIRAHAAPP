@@ -8,7 +8,10 @@
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-    <!-- Local Icons -->
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Local Icons (fallback) -->
     <link rel="stylesheet" href="css/icons.css">
 
     <!-- Stylesheets -->
@@ -293,28 +296,28 @@
                 kpis: {
                   super_admin: [
                     { id: "total_orders", title: "Total Orders", value: "1,234", change: "+12%", changeType: "positive", icon: "fas fa-shopping-cart" },
-                    { id: "revenue", title: "Revenue", value: "$45,678", change: "+8%", changeType: "positive", icon: "fas fa-dollar-sign" },
+                    { id: "revenue", title: "Revenue", value: "Rwf 45,678", change: "+8%", changeType: "positive", icon: "fas fa-dollar-sign" },
                     { id: "active_merchants", title: "Active Merchants", value: "567", change: "-2%", changeType: "negative", icon: "fas fa-store" },
                     { id: "pending_tasks", title: "Pending Tasks", value: "23", change: "0%", changeType: "neutral", icon: "fas fa-clock" }
                   ],
                   merchant: [
                     { id: "orders", title: "Orders", value: "89", change: "+15%", changeType: "positive", icon: "fas fa-shopping-cart" },
-                    { id: "revenue", title: "Revenue", value: "$3,456", change: "+22%", changeType: "positive", icon: "fas fa-dollar-sign" },
+                    { id: "revenue", title: "Revenue", value: "Rwf 3,456", change: "+22%", changeType: "positive", icon: "fas fa-dollar-sign" },
                     { id: "products", title: "Products", value: "45", change: "+3", changeType: "positive", icon: "fas fa-box" },
                     { id: "rating", title: "Rating", value: "4.8", change: "+0.2", changeType: "positive", icon: "fas fa-star" }
                   ],
                   accountant: [
                     { id: "transactions", title: "Transactions", value: "2,345", change: "+18%", changeType: "positive", icon: "fas fa-credit-card" },
-                    { id: "total_revenue", title: "Total Revenue", value: "$78,901", change: "+12%", changeType: "positive", icon: "fas fa-chart-line" },
-                    { id: "pending_payments", title: "Pending Payments", value: "$5,432", change: "-8%", changeType: "negative", icon: "fas fa-clock" },
-                    { id: "monthly_profit", title: "Monthly Profit", value: "$12,345", change: "+25%", changeType: "positive", icon: "fas fa-piggy-bank" }
+                    { id: "total_revenue", title: "Total Revenue", value: "Rwf 78,901", change: "+12%", changeType: "positive", icon: "fas fa-chart-line" },
+                    { id: "pending_payments", title: "Pending Payments", value: "Rwf 5,432", change: "-8%", changeType: "negative", icon: "fas fa-clock" },
+                    { id: "monthly_profit", title: "Monthly Profit", value: "Rwf 12,345", change: "+25%", changeType: "positive", icon: "fas fa-piggy-bank" }
                   ]
                 },
                 recentActivity: [
                   { id: 1, title: "New order received", description: "Order #1234 from John Doe", timestamp: new Date().toISOString(), icon: "fas fa-plus" },
                   { id: 2, title: "New user registered", description: "Jane Smith joined as merchant", timestamp: new Date(Date.now() - 900000).toISOString(), icon: "fas fa-user" },
                   { id: 3, title: "Order completed", description: "Order #1230 delivered successfully", timestamp: new Date(Date.now() - 1800000).toISOString(), icon: "fas fa-check" },
-                  { id: 4, title: "Payment processed", description: "$234.50 payment confirmed", timestamp: new Date(Date.now() - 2700000).toISOString(), icon: "fas fa-credit-card" },
+                  { id: 4, title: "Payment processed", description: "Rwf 234.50 payment confirmed", timestamp: new Date(Date.now() - 2700000).toISOString(), icon: "fas fa-credit-card" },
                   { id: 5, title: "Product updated", description: "Burger Special price changed", timestamp: new Date(Date.now() - 3600000).toISOString(), icon: "fas fa-edit" }
                 ],
                 quickActions: {
@@ -816,16 +819,26 @@
               profileBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 profileMenu.classList.toggle('show');
+
+                // Close other dropdowns
+                document.querySelectorAll('.profile-menu').forEach(menu => {
+                  if (menu !== profileMenu) {
+                    menu.classList.remove('show');
+                  }
+                });
               });
 
-              document.addEventListener('click', () => {
-                profileMenu.classList.remove('show');
+              document.addEventListener('click', (e) => {
+                if (!e.target.closest('.profile-dropdown')) {
+                  profileMenu.classList.remove('show');
+                }
               });
             }
 
             // Logout functionality
             document.addEventListener('click', (e) => {
-              if (e.target.closest('[data-action="logout"]')) {
+              if (e.target.closest('[data-action="logout"]') ||
+                  e.target.textContent.trim() === 'Sign Out') {
                 this.logout();
               }
             });
@@ -1078,14 +1091,14 @@
                       <div class="card">
                         <div class="card-body">
                           <h4>Grilled Burger</h4>
-                          <p>$12.99 - Main Course</p>
+                          <p>Rwf 12,990 - Main Course</p>
                           <span class="badge badge-success">Available</span>
                         </div>
                       </div>
                       <div class="card">
                         <div class="card-body">
                           <h4>Caesar Salad</h4>
-                          <p>$8.99 - Salads</p>
+                          <p>Rwf 8,990 - Salads</p>
                           <span class="badge badge-success">Available</span>
                         </div>
                       </div>
@@ -1111,7 +1124,7 @@
                         <div class="card-body" style="display: flex; justify-content: space-between; align-items: center;">
                           <div>
                             <h4>Order #1234</h4>
-                            <p>John Smith - 3 items - $24.97</p>
+                            <p>John Smith - 3 items - Rwf 24,970</p>
                           </div>
                           <span class="badge badge-warning">Pending</span>
                         </div>
@@ -1120,7 +1133,7 @@
                         <div class="card-body" style="display: flex; justify-content: space-between; align-items: center;">
                           <div>
                             <h4>Order #1235</h4>
-                            <p>Sarah Johnson - 2 items - $18.50</p>
+                            <p>Sarah Johnson - 2 items - Rwf 18,500</p>
                           </div>
                           <span class="badge badge-info">Preparing</span>
                         </div>
@@ -1150,7 +1163,7 @@
                             <p>Avuma Restaurant - Payment</p>
                           </div>
                           <div style="text-align: right;">
-                            <div style="font-weight: var(--font-weight-bold); color: var(--color-success);">$234.50</div>
+                            <div style="font-weight: var(--font-weight-bold); color: var(--color-success);">Rwf 234,500</div>
                             <span class="badge badge-success">Completed</span>
                           </div>
                         </div>

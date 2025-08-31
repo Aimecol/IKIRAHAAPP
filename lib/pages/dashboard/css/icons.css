@@ -15,43 +15,43 @@
   font-weight: 400;
 }
 
-/* Icon Definitions using Unicode */
-.fa-bars::before { content: "\2630"; }
-.fa-search::before { content: "\1F50D"; }
-.fa-bell::before { content: "\1F514"; }
-.fa-user::before { content: "\1F464"; }
-.fa-cog::before { content: "\2699"; }
-.fa-sign-out-alt::before { content: "\27A4"; }
-.fa-chevron-down::before { content: "\25BC"; }
-.fa-chevron-left::before { content: "\25C0"; }
-.fa-chevron-right::before { content: "\25B6"; }
-.fa-home::before { content: "\1F3E0"; }
-.fa-tachometer-alt::before { content: "\1F4CA"; }
-.fa-users::before { content: "\1F465"; }
-.fa-store::before { content: "\1F3EA"; }
-.fa-box::before { content: "\1F4E6"; }
-.fa-shopping-cart::before { content: "\1F6D2"; }
-.fa-chart-bar::before { content: "\1F4CA"; }
-.fa-chart-line::before { content: "\1F4C8"; }
-.fa-credit-card::before { content: "\1F4B3"; }
-.fa-file-alt::before { content: "\1F4C4"; }
-.fa-dollar-sign::before { content: "\0024"; }
-.fa-star::before { content: "\2605"; }
-.fa-plus::before { content: "\002B"; }
-.fa-edit::before { content: "\270E"; }
-.fa-check::before { content: "\2713"; }
-.fa-clock::before { content: "\1F551"; }
-.fa-download::before { content: "\2B07"; }
-.fa-balance-scale::before { content: "\2696"; }
-.fa-list::before { content: "\1F4CB"; }
-.fa-piggy-bank::before { content: "\1F437"; }
-.fa-refresh::before { content: "\21BB"; }
-.fa-spinner::before { content: "\21BB"; }
-.fa-times::before { content: "\00D7"; }
-.fa-check-circle::before { content: "\2713"; }
-.fa-exclamation-circle::before { content: "\0021"; }
-.fa-info-circle::before { content: "\2139"; }
-.fa-sign-in-alt::before { content: "\27A4"; }
+/* FontAwesome Icon Definitions - Apple-style */
+.fa-bars::before { content: "\f0c9"; }
+.fa-search::before { content: "\f002"; }
+.fa-bell::before { content: "\f0f3"; }
+.fa-user::before { content: "\f007"; }
+.fa-cog::before { content: "\f013"; }
+.fa-sign-out-alt::before { content: "\f2f5"; }
+.fa-chevron-down::before { content: "\f078"; }
+.fa-chevron-left::before { content: "\f053"; }
+.fa-chevron-right::before { content: "\f054"; }
+.fa-home::before { content: "\f015"; }
+.fa-tachometer-alt::before { content: "\f3fd"; }
+.fa-users::before { content: "\f0c0"; }
+.fa-store::before { content: "\f54e"; }
+.fa-box::before { content: "\f466"; }
+.fa-shopping-cart::before { content: "\f07a"; }
+.fa-chart-bar::before { content: "\f080"; }
+.fa-chart-line::before { content: "\f201"; }
+.fa-credit-card::before { content: "\f09d"; }
+.fa-file-alt::before { content: "\f15c"; }
+.fa-dollar-sign::before { content: "\f155"; }
+.fa-star::before { content: "\f005"; }
+.fa-plus::before { content: "\f067"; }
+.fa-edit::before { content: "\f044"; }
+.fa-check::before { content: "\f00c"; }
+.fa-clock::before { content: "\f017"; }
+.fa-download::before { content: "\f019"; }
+.fa-balance-scale::before { content: "\f24e"; }
+.fa-list::before { content: "\f03a"; }
+.fa-piggy-bank::before { content: "\f4d3"; }
+.fa-refresh::before { content: "\f021"; }
+.fa-spinner::before { content: "\f110"; }
+.fa-times::before { content: "\f00d"; }
+.fa-check-circle::before { content: "\f058"; }
+.fa-exclamation-circle::before { content: "\f06a"; }
+.fa-info-circle::before { content: "\f05a"; }
+.fa-sign-in-alt::before { content: "\f2f6"; }
 
 /* Spinning animation for spinner */
 .fa-spin {

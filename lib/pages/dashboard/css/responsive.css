@@ -52,6 +52,11 @@
     display: none;
   }
 
+  /* Ensure right alignment on mobile */
+  .top-bar-right {
+    margin-left: auto;
+  }
+
   /* Adjust search input */
   .search-input {
     width: 200px;
@@ -164,8 +169,13 @@
   /* Adjust profile dropdown */
   .profile-menu {
     right: var(--space-3);
-    left: var(--space-3);
-    min-width: auto;
+    left: auto;
+    min-width: 180px;
+  }
+
+  /* Ensure profile dropdown stays on right */
+  .profile-dropdown {
+    margin-left: auto;
   }
 }
 

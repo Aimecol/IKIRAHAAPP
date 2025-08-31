@@ -345,7 +345,7 @@
   z-index: var(--z-dropdown);
 }
 
-.profile-dropdown.open .profile-menu {
+.profile-menu.show {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
