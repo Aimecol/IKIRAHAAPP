@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .credentials {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>IKIRAHA Dashboard API Integration Test</h1>
+    
+    <div class="credentials">
+        <h3>Test Credentials</h3>
+        <p><strong>Admin:</strong> admin@ikiraha.com / password</p>
+        <p><strong>Merchant:</strong> merchant@ikiraha.com / password</p>
+        <p><strong>Accountant:</strong> accountant@ikiraha.com / password</p>
+    </div>
+
+    <div class="test-section">
+        <h2>1. API Connection Test</h2>
+        <button onclick="testApiConnection()">Test API Health</button>
+        <div id="api-test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Authentication Test</h2>
+        <button onclick="testLogin()">Test Login</button>
+        <button onclick="testProfile()">Test Get Profile</button>
+        <button onclick="testLogout()">Test Logout</button>
+        <div id="auth-test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Products API Test</h2>
+        <button onclick="testGetProducts()">Get Products</button>
+        <button onclick="testGetCategories()">Get Categories</button>
+        <button onclick="testCreateProduct()">Create Product</button>
+        <div id="products-test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Orders API Test</h2>
+        <button onclick="testGetOrders()">Get Orders</button>
+        <button onclick="testCreateOrder()">Create Order</button>
+        <div id="orders-test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Dashboard Integration Test</h2>
+        <button onclick="testDashboardData()">Test Dashboard Data</button>
+        <div id="dashboard-test-result"></div>
+    </div>
+
+    <!-- Include API service -->
+    <script src="js/dashboard-config.js"></script>
+    <script src="js/api-service.js"></script>
+
+    <script>
+        let api = new ApiService();
+        let currentToken = null;
+
+        function showResult(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+
+        function clearResults(containerId) {
+            document.getElementById(containerId).innerHTML = '';
+        }
+
+        async function testApiConnection() {
+            clearResults('api-test-result');
+            try {
+                const response = await api.healthCheck();
+                if (response.success) {
+                    showResult('api-test-result', '✓ API Health Check Passed', 'success');
+                    showResult('api-test-result', `Response: ${JSON.stringify(response, null, 2)}`, 'info');
+                } else {
+                    showResult('api-test-result', '❌ API Health Check Failed', 'error');
+                    showResult('api-test-result', `Response: ${JSON.stringify(response, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult('api-test-result', `❌ API Connection Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            clearResults('auth-test-result');
+            try {
+                const response = await api.login('admin@ikiraha.com', 'password');
+                if (response.success) {
+                    currentToken = response.data.access_token;
+                    showResult('auth-test-result', '✓ Login Successful', 'success');
+                    showResult('auth-test-result', `User: ${response.data.user.name} (${response.data.user.role})`, 'info');
+                } else {
+                    showResult('auth-test-result', '❌ Login Failed', 'error');
+                    showResult('auth-test-result', `Error: ${response.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('auth-test-result', `❌ Login Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testProfile() {
+            clearResults('auth-test-result');
+            try {
+                const response = await api.getProfile();
+                if (response.success) {
+                    showResult('auth-test-result', '✓ Profile Retrieved Successfully', 'success');
+                    showResult('auth-test-result', `Profile: ${JSON.stringify(response.data.user, null, 2)}`, 'info');
+                } else {
+                    showResult('auth-test-result', '❌ Profile Retrieval Failed', 'error');
+                }
+            } catch (error) {
+                showResult('auth-test-result', `❌ Profile Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLogout() {
+            try {
+                await api.logout();
+                showResult('auth-test-result', '✓ Logout Successful', 'success');
+                currentToken = null;
+            } catch (error) {
+                showResult('auth-test-result', `❌ Logout Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testGetProducts() {
+            clearResults('products-test-result');
+            try {
+                const response = await api.getProducts();
+                if (response.success) {
+                    showResult('products-test-result', `✓ Products Retrieved: ${response.data.products.length} items`, 'success');
+                    showResult('products-test-result', `Sample: ${JSON.stringify(response.data.products.slice(0, 2), null, 2)}`, 'info');
+                } else {
+                    showResult('products-test-result', '❌ Products Retrieval Failed', 'error');
+                }
+            } catch (error) {
+                showResult('products-test-result', `❌ Products Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testGetCategories() {
+            try {
+                const response = await api.getCategories();
+                if (response.success) {
+                    showResult('products-test-result', `✓ Categories Retrieved: ${response.data.categories.length} items`, 'success');
+                } else {
+                    showResult('products-test-result', '❌ Categories Retrieval Failed', 'error');
+                }
+            } catch (error) {
+                showResult('products-test-result', `❌ Categories Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCreateProduct() {
+            if (!currentToken) {
+                showResult('products-test-result', '❌ Please login first', 'error');
+                return;
+            }
+
+            try {
+                const productData = {
+                    name: 'Test Product',
+                    description: 'Test product from dashboard',
+                    price: 5000,
+                    category_id: 1,
+                    is_available: true,
+                    is_featured: false
+                };
+
+                const response = await api.createProduct(productData);
+                if (response.success) {
+                    showResult('products-test-result', '✓ Product Created Successfully', 'success');
+                } else {
+                    showResult('products-test-result', `❌ Product Creation Failed: ${response.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('products-test-result', `❌ Product Creation Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testGetOrders() {
+            clearResults('orders-test-result');
+            try {
+                const response = await api.getAllOrders();
+                if (response.success) {
+                    showResult('orders-test-result', `✓ Orders Retrieved: ${response.data.orders.length} items`, 'success');
+                    showResult('orders-test-result', `Sample: ${JSON.stringify(response.data.orders.slice(0, 1), null, 2)}`, 'info');
+                } else {
+                    showResult('orders-test-result', '❌ Orders Retrieval Failed', 'error');
+                }
+            } catch (error) {
+                showResult('orders-test-result', `❌ Orders Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCreateOrder() {
+            if (!currentToken) {
+                showResult('orders-test-result', '❌ Please login first', 'error');
+                return;
+            }
+
+            try {
+                const orderData = {
+                    restaurant_id: 1,
+                    items: [
+                        {
+                            product_id: 1,
+                            quantity: 2,
+                            price: 2700
+                        }
+                    ],
+                    payment_method: 'mtn_rwanda',
+                    payment_phone: '+250788123456',
+                    delivery_address: 'Test Address, Kigali',
+                    delivery_phone: '+250788123456',
+                    notes: 'Test order from dashboard'
+                };
+
+                const response = await api.createOrder(orderData);
+                if (response.success) {
+                    showResult('orders-test-result', '✓ Order Created Successfully', 'success');
+                } else {
+                    showResult('orders-test-result', `❌ Order Creation Failed: ${response.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('orders-test-result', `❌ Order Creation Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testDashboardData() {
+            clearResults('dashboard-test-result');
+            try {
+                const [products, orders, categories] = await Promise.all([
+                    api.getProducts(),
+                    api.getAllOrders(),
+                    api.getCategories()
+                ]);
+
+                showResult('dashboard-test-result', '✓ Dashboard Data Integration Test', 'success');
+                showResult('dashboard-test-result', `Products: ${products.success ? products.data.products.length : 'Failed'}`, 'info');
+                showResult('dashboard-test-result', `Orders: ${orders.success ? orders.data.orders.length : 'Failed'}`, 'info');
+                showResult('dashboard-test-result', `Categories: ${categories.success ? categories.data.categories.length : 'Failed'}`, 'info');
+                
+                if (products.success && orders.success && categories.success) {
+                    showResult('dashboard-test-result', '✓ All dashboard components can fetch real data', 'success');
+                } else {
+                    showResult('dashboard-test-result', '❌ Some dashboard components failed to fetch data', 'error');
+                }
+            } catch (error) {
+                showResult('dashboard-test-result', `❌ Dashboard Data Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-run basic tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testApiConnection();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
