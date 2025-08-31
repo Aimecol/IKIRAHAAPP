@@ -297,6 +297,22 @@
   font-size: var(--font-size-lg);
 }
 
+.avatar-fallback {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: var(--text-inverse);
+  font-weight: var(--font-weight-medium);
+}
+
+.profile-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+}
+
 /* Tables */
 .table-container {
   background-color: var(--bg-elevated);

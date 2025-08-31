@@ -105,49 +105,15 @@
             font-family: var(--font-family-mono);
         }
 
-        .role-selector {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-3);
-            margin-bottom: var(--space-6);
-        }
-
-        .role-option {
-            padding: var(--space-4);
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            text-align: center;
+        .demo-role {
             cursor: pointer;
-            transition: all var(--transition-fast);
-            background-color: var(--bg-elevated);
+            transition: background-color var(--transition-fast);
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
         }
 
-        .role-option:hover {
-            border-color: var(--color-primary);
-            background-color: var(--color-primary-light);
-        }
-
-        .role-option.selected {
-            border-color: var(--color-primary);
-            background-color: var(--color-primary-light);
-        }
-
-        .role-option-icon {
-            font-size: var(--font-size-xl);
-            color: var(--color-primary);
-            margin-bottom: var(--space-2);
-        }
-
-        .role-option-title {
-            font-size: var(--font-size-sm);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-            margin-bottom: var(--space-1);
-        }
-
-        .role-option-desc {
-            font-size: var(--font-size-xs);
-            color: var(--text-secondary);
+        .demo-role:hover {
+            background-color: var(--bg-tertiary);
         }
 
         .login-form {
@@ -176,10 +142,6 @@
             .login-card {
                 padding: var(--space-6);
             }
-
-            .role-selector {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -197,56 +159,31 @@
                 <h4><i class="fas fa-info-circle"></i> Demo Credentials</h4>
                 <div class="demo-role">
                     <span class="demo-role-name">Super Admin</span>
-                    <span class="demo-role-email">admin@ikiraha.com</span>
+                    <span class="demo-role-email">admin@ikiraha.com / admin123</span>
                 </div>
                 <div class="demo-role">
                     <span class="demo-role-name">Merchant</span>
-                    <span class="demo-role-email">merchant@ikiraha.com</span>
+                    <span class="demo-role-email">merchant@ikiraha.com / merchant123</span>
                 </div>
                 <div class="demo-role">
                     <span class="demo-role-name">Accountant</span>
-                    <span class="demo-role-email">accountant@ikiraha.com</span>
+                    <span class="demo-role-email">accountant@ikiraha.com / accountant123</span>
                 </div>
                 <p style="margin-top: var(--space-3); margin-bottom: 0; font-size: var(--font-size-xs); color: var(--text-tertiary);">
-                    Password for all accounts: <code>admin123</code>, <code>merchant123</code>, <code>accountant123</code>
+                    <i class="fas fa-magic"></i> Role is automatically detected based on your credentials
                 </p>
-            </div>
-
-            <!-- Quick Role Selection -->
-            <div class="role-selector">
-                <div class="role-option" data-role="super_admin" data-email="admin@ikiraha.com">
-                    <div class="role-option-icon">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <div class="role-option-title">Super Admin</div>
-                    <div class="role-option-desc">Full Access</div>
-                </div>
-                <div class="role-option selected" data-role="merchant" data-email="merchant@ikiraha.com">
-                    <div class="role-option-icon">
-                        <i class="fas fa-store"></i>
-                    </div>
-                    <div class="role-option-title">Merchant</div>
-                    <div class="role-option-desc">Restaurant</div>
-                </div>
-                <div class="role-option" data-role="accountant" data-email="accountant@ikiraha.com">
-                    <div class="role-option-icon">
-                        <i class="fas fa-calculator"></i>
-                    </div>
-                    <div class="role-option-title">Accountant</div>
-                    <div class="role-option-desc">Financial</div>
-                </div>
             </div>
 
             <!-- Login Form -->
             <form class="login-form" id="login-form">
                 <div class="form-group">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" class="form-input" value="merchant@ikiraha.com" required>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" id="password" class="form-input" value="merchant123" required>
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-lg">
@@ -267,7 +204,6 @@
         class LoginApp {
             constructor() {
                 this.auth = new AuthManager();
-                this.selectedRole = 'merchant';
                 this.init();
             }
 
@@ -284,13 +220,6 @@
             }
 
             setupEventListeners() {
-                // Role selection
-                document.querySelectorAll('.role-option').forEach(option => {
-                    option.addEventListener('click', () => {
-                        this.selectRole(option);
-                    });
-                });
-
                 // Login form
                 const loginForm = document.getElementById('login-form');
                 loginForm.addEventListener('submit', (e) => {
@@ -303,37 +232,35 @@
                     e.preventDefault();
                     this.handleForgotPassword();
                 });
-            }
 
-            selectRole(selectedOption) {
-                // Update UI
-                document.querySelectorAll('.role-option').forEach(option => {
-                    option.classList.remove('selected');
+                // Demo credential quick fill
+                document.querySelectorAll('.demo-role').forEach((roleElement, index) => {
+                    roleElement.style.cursor = 'pointer';
+                    roleElement.addEventListener('click', () => {
+                        const credentials = [
+                            { email: 'admin@ikiraha.com', password: 'admin123' },
+                            { email: 'merchant@ikiraha.com', password: 'merchant123' },
+                            { email: 'accountant@ikiraha.com', password: 'accountant123' }
+                        ];
+
+                        if (credentials[index]) {
+                            document.getElementById('email').value = credentials[index].email;
+                            document.getElementById('password').value = credentials[index].password;
+                        }
+                    });
                 });
-                selectedOption.classList.add('selected');
-
-                // Update form
-                const email = selectedOption.getAttribute('data-email');
-                const role = selectedOption.getAttribute('data-role');
-
-                document.getElementById('email').value = email;
-
-                // Set password based on role
-                const passwords = {
-                    'super_admin': 'admin123',
-                    'merchant': 'merchant123',
-                    'accountant': 'accountant123'
-                };
-                document.getElementById('password').value = passwords[role] || '';
-
-                this.selectedRole = role;
             }
 
             async handleLogin(e) {
                 e.preventDefault();
 
-                const email = document.getElementById('email').value;
+                const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password').value;
+
+                if (!email || !password) {
+                    this.showError('Please enter both email and password');
+                    return;
+                }
 
                 // Disable form
                 const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -345,12 +272,18 @@
                     const result = await this.auth.login(email, password);
 
                     if (result.success) {
-                        // Redirect to dashboard
-                        window.location.href = 'index.html';
+                        // Show success message with role detection
+                        this.showSuccess(`Welcome ${result.user.name}! Detected role: ${result.user.role.replace('_', ' ').toUpperCase()}`);
+
+                        // Redirect to dashboard after brief delay
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
                     } else {
                         this.showError(result.error);
                     }
                 } catch (error) {
+                    console.error('Login error:', error);
                     this.showError('Login failed. Please try again.');
                 } finally {
                     // Re-enable form
@@ -363,35 +296,55 @@
                 alert('Password reset functionality would be implemented here.\n\nFor demo purposes, use the provided credentials.');
             }
 
-            showError(message) {
-                // Simple error display - in real app would use toast
-                const existingError = document.querySelector('.login-error');
-                if (existingError) {
-                    existingError.remove();
+            showMessage(message, type = 'error') {
+                // Remove existing messages
+                const existingMessage = document.querySelector('.login-message');
+                if (existingMessage) {
+                    existingMessage.remove();
                 }
 
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'login-error';
-                errorDiv.style.cssText = `
-                    background-color: rgba(255, 59, 48, 0.1);
-                    color: var(--color-danger);
+                const colors = {
+                    error: { bg: 'rgba(255, 59, 48, 0.1)', color: 'var(--color-danger)', icon: 'fas fa-exclamation-circle' },
+                    success: { bg: 'rgba(52, 199, 89, 0.1)', color: 'var(--color-success)', icon: 'fas fa-check-circle' },
+                    info: { bg: 'rgba(0, 122, 255, 0.1)', color: 'var(--color-primary)', icon: 'fas fa-info-circle' }
+                };
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'login-message';
+                messageDiv.style.cssText = `
+                    background-color: ${colors[type].bg};
+                    color: ${colors[type].color};
                     padding: var(--space-3);
                     border-radius: var(--radius-lg);
                     margin-bottom: var(--space-4);
                     font-size: var(--font-size-sm);
                     text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: var(--space-2);
                 `;
-                errorDiv.textContent = message;
+                messageDiv.innerHTML = `<i class="${colors[type].icon}"></i> ${message}`;
 
                 const form = document.getElementById('login-form');
-                form.parentNode.insertBefore(errorDiv, form);
+                form.parentNode.insertBefore(messageDiv, form);
 
-                // Auto-remove after 5 seconds
-                setTimeout(() => {
-                    if (errorDiv.parentNode) {
-                        errorDiv.remove();
-                    }
-                }, 5000);
+                // Auto-remove after 5 seconds (except success messages)
+                if (type !== 'success') {
+                    setTimeout(() => {
+                        if (messageDiv.parentNode) {
+                            messageDiv.remove();
+                        }
+                    }, 5000);
+                }
+            }
+
+            showError(message) {
+                this.showMessage(message, 'error');
+            }
+
+            showSuccess(message) {
+                this.showMessage(message, 'success');
             }
         }
 
