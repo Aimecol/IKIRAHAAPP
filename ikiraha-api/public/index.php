@@ -37,8 +37,11 @@ class Router {
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
+        // Debug: Log the original request URI
+        error_log("Original URI: " . $requestUri);
+
         // Remove base path if exists
-        $basePath = '/ikiraha-api/public';
+        $basePath = '/ikirahaapp/ikiraha-api/public';
         if (strpos($requestUri, $basePath) === 0) {
             $requestUri = substr($requestUri, strlen($basePath));
         }
@@ -49,6 +52,9 @@ class Router {
             $requestUri = '/';
         }
 
+        // Debug: Log the processed request URI
+        error_log("Processed URI: " . $requestUri . " Method: " . $requestMethod);
+
         foreach ($this->routes as $route) {
             if ($route['method'] !== $requestMethod) {
                 continue;
@@ -57,6 +63,9 @@ class Router {
             // Convert route pattern to regex
             $pattern = preg_replace('/\{([^}]+)\}/', '([^/]+)', $route['pattern']);
             $pattern = '#^' . $pattern . '$#';
+
+            // Debug: Log route matching
+            error_log("Checking route: " . $route['pattern'] . " against " . $requestUri . " with pattern " . $pattern);
 
             if (preg_match($pattern, $requestUri, $matches)) {
                 array_shift($matches); // Remove full match
