@@ -1,41 +1,98 @@
-# IKIRAHA Food Delivery API
+# IKIRAHA Food Delivery System
 
-A production-ready REST API backend for the IKIRAHA food delivery mobile application, built with pure PHP and custom MVC architecture.
+A complete food delivery platform consisting of a Flutter mobile app, PHP REST API backend, and web dashboard. This system supports clients, merchants, accountants, and super admins with secure authentication and comprehensive order management.
 
-## Features
+## System Overview
 
-- **Secure Authentication**: JWT-based authentication with role-based access control
-- **Four User Types**: Client, Merchant, Accountant, Super Admin
-- **Complete Food Delivery System**: Products, orders, restaurants, categories
-- **Security First**: SQL injection prevention, XSS protection, password hashing
-- **Production Ready**: Error handling, logging, input validation
-- **XAMPP Compatible**: Designed to run seamlessly in XAMPP environment
+The IKIRAHA system consists of three main components:
+
+1. **Mobile App** (Flutter/Dart) - For clients to browse and order food
+2. **Backend API** (PHP) - RESTful API handling all business logic
+3. **Web Dashboard** (HTML/CSS/JS) - For merchants, accountants, and admins
 
 ## System Requirements
 
-- PHP 7.4 or higher
-- MySQL 5.7 or higher
-- Apache with mod_rewrite enabled
-- XAMPP (recommended)
+### Development Environment
+- **XAMPP** (Apache + MySQL + PHP 7.4+)
+- **Flutter SDK** (3.0+)
+- **Android Studio** or **VS Code** with Flutter extensions
+- **Web Browser** (Chrome, Firefox, Safari)
 
-## Installation
+### Mobile Development
+- **Android Studio** with Android SDK
+- **Android Emulator** or **Physical Android Device**
+- **iOS Simulator** (Mac only) or **Physical iOS Device**
 
-1. **Clone/Copy the project** to your XAMPP htdocs directory:
+### Production Environment
+- **Web Server** (Apache/Nginx)
+- **PHP 7.4+** with extensions: PDO, MySQL, JSON, OpenSSL
+- **MySQL 5.7+** or **MariaDB 10.3+**
+- **SSL Certificate** (for HTTPS)
+- **Domain Name** (for production deployment)
+
+## Complete System Setup Guide
+
+### Step 1: Backend API Setup
+
+#### 1.1 Install XAMPP
+1. Download and install **XAMPP** from [https://www.apachefriends.org/](https://www.apachefriends.org/)
+2. Install to default location: `C:\xampp\`
+
+#### 1.2 Setup Project Files
+1. **Copy the project** to XAMPP htdocs directory:
    ```
-   c:\xampp\htdocs\ikirahaapp\ikiraha-api\
+   C:\xampp\htdocs\ikirahaapp\
    ```
 
-2. **Start XAMPP** services (Apache and MySQL)
+2. **Verify directory structure**:
+   ```
+   C:\xampp\htdocs\ikirahaapp\
+   ├── lib\                    (Flutter mobile app)
+   ├── lib\pages\dashboard\    (Web dashboard)
+   └── ikiraha-api\           (PHP backend API)
+   ```
 
-3. **Run the setup script** to initialize the database:
+#### 1.3 Start XAMPP Services
+1. Open **XAMPP Control Panel**
+2. Start **Apache** service
+3. Start **MySQL** service
+4. Verify both services show "Running" status
+
+#### 1.4 Initialize Database
+1. Open **Command Prompt** or **Terminal**
+2. Navigate to the API directory:
    ```bash
-   cd c:\xampp\htdocs\ikirahaapp\ikiraha-api
+   cd C:\xampp\htdocs\ikirahaapp\ikiraha-api
+   ```
+3. Run the database setup script:
+   ```bash
    php setup.php
    ```
+4. You should see success messages for database creation
 
-4. **Verify installation** by accessing:
-   - Health check: `http://localhost/ikiraha-api/public/health`
-   - API root: `http://localhost/ikiraha-api/public/`
+#### 1.5 Verify Backend API
+1. Open web browser and test these URLs:
+   - **API Health Check**: `http://localhost/ikirahaapp/ikiraha-api/public/health`
+   - **API Root**: `http://localhost/ikirahaapp/ikiraha-api/public/`
+   - **Test Endpoint**: `http://localhost/ikirahaapp/ikiraha-api/public/test.php`
+
+2. **Expected Response** (Health Check):
+   ```json
+   {
+     "success": true,
+     "data": {
+       "status": "healthy",
+       "timestamp": "2024-01-01 12:00:00",
+       "version": "1.0.0",
+       "checks": {
+         "database": {
+           "status": "healthy",
+           "message": "Database connection successful"
+         }
+       }
+     }
+   }
+   ```
 
 ## Default Test Accounts
 
