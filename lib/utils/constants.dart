@@ -79,9 +79,9 @@ class AppConstants {
 
 class AppColors {
   // Primary Colors
-  static const Color primary = Color(0xFF2E7D32); // Green
-  static const Color primaryLight = Color(0xFF60AD5E);
-  static const Color primaryDark = Color(0xFF005005);
+  static const Color primary = Color(0xFFFF6F00);
+  static const Color primaryLight = Color(0xFFFF9F40);
+  static const Color primaryDark = Color(0xFFC43E00);
   
   // Secondary Colors
   static const Color secondary = Color(0xFFFF6F00); // Orange

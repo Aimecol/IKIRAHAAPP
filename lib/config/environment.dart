@@ -64,8 +64,8 @@ class Environment {
   
   // UI Configuration
   String get themeMode => dotenv.env['THEME_MODE'] ?? 'light';
-  int get primaryColor => int.tryParse(dotenv.env['PRIMARY_COLOR'] ?? '0xFF2E7D32') ?? 0xFF2E7D32;
-  int get secondaryColor => int.tryParse(dotenv.env['SECONDARY_COLOR'] ?? '0xFFFF6F00') ?? 0xFFFF6F00;
+  int get primaryColor => int.tryParse(dotenv.env['PRIMARY_COLOR'] ?? '0xFF5722') ?? 0xFF5722;
+  int get secondaryColor => int.tryParse(dotenv.env['SECONDARY_COLOR'] ?? '0xFF9800') ?? 0xFF9800;
   
   // Development Tools
   bool get enableDevTools => dotenv.env['ENABLE_DEV_TOOLS']?.toLowerCase() == 'true';
