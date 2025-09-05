@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
+import 'screens/auth/reset_password_screen.dart';
 import 'pages/public/home.dart';
 import 'utils/constants.dart';
-import 'models/user_model.dart';
 import 'config/environment.dart';
 
 void main() async {
@@ -46,13 +46,23 @@ class IkirahaApp extends StatelessWidget {
           '/home': (context) => const Home(),
         },
         onGenerateRoute: (settings) {
-          // Handle dynamic routes if needed
-          switch (settings.name) {
-            default:
+          // Handle reset password route with token parameter
+          if (settings.name?.startsWith('/reset-password') == true) {
+            final uri = Uri.parse(settings.name!);
+            final token = uri.queryParameters['token'];
+
+            if (token != null) {
               return MaterialPageRoute(
-                builder: (context) => const LoginScreen(),
+                builder: (context) => ResetPasswordScreen(token: token),
+                settings: settings,
               );
+            }
           }
+
+          // Default route
+          return MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          );
         },
       ),
     );

@@ -124,6 +124,11 @@ $router->addRoute('GET', '/auth/profile', 'AuthController', 'getProfile');
 $router->addRoute('PUT', '/auth/profile', 'AuthController', 'updateProfile');
 $router->addRoute('POST', '/auth/change-password', 'AuthController', 'changePassword');
 
+// Password reset routes
+$router->addRoute('POST', '/auth/forgot-password', 'ForgotPasswordController', 'forgotPassword');
+$router->addRoute('POST', '/auth/reset-password', 'ForgotPasswordController', 'resetPassword');
+$router->addRoute('GET', '/auth/validate-reset-token/{token}', 'ForgotPasswordController', 'validateResetToken');
+
 // Product routes
 $router->addRoute('GET', '/products', 'ProductController', 'getAllProducts');
 $router->addRoute('GET', '/products/{id}', 'ProductController', 'getProductById');

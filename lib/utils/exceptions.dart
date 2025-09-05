@@ -108,7 +108,7 @@ class ExceptionHandler {
     try {
       if (responseBody != null && responseBody.isNotEmpty) {
         responseData = Map<String, dynamic>.from(
-          const JsonDecoder().convert(responseBody) as Map,
+          jsonDecode(responseBody) as Map,
         );
         message = responseData['message'] as String? ?? 
                  responseData['error'] as String? ?? 

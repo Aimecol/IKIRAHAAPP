@@ -313,5 +313,68 @@ class User {
             throw $e;
         }
     }
+
+    /**
+     * Find user by email
+     */
+    public function findByEmail($email) {
+        try {
+            $query = "SELECT id, uuid, email, name, phone, role, status, email_verified, created_at
+                     FROM " . $this->table_name . "
+                     WHERE email = :email";
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            error_log("Find by email error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Find user by ID
+     */
+    public function findById($id) {
+        try {
+            $query = "SELECT id, uuid, email, name, phone, role, status, email_verified, created_at
+                     FROM " . $this->table_name . "
+                     WHERE id = :id";
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            error_log("Find by ID error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Update user password
+     */
+    public function updatePassword($userId, $hashedPassword) {
+        try {
+            $query = "UPDATE " . $this->table_name . "
+                     SET password_hash = :password_hash, updated_at = NOW()
+                     WHERE id = :id";
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':password_hash', $hashedPassword);
+            $stmt->bindParam(':id', $userId);
+
+            return $stmt->execute();
+
+        } catch (PDOException $e) {
+            error_log("Update password error: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

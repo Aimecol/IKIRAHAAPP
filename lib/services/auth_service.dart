@@ -577,6 +577,156 @@ class AuthService {
         throw ArgumentError('Unsupported HTTP method: $method');
     }
   }
+
+  // Send forgot password email
+  static Future<AuthResult> forgotPassword({
+    required String email,
+  }) async {
+    try {
+      _log('Sending forgot password request for: $email');
+
+      final response = await http.post(
+        Uri.parse('${ApiConstants.baseUrl}/auth/forgot-password'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email.trim().toLowerCase(),
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        return AuthResult(
+          success: true,
+          message: data['message'] ?? 'Password reset email sent successfully',
+        );
+      } else {
+        return AuthResult(
+          success: false,
+          message: data['message'] ?? 'Failed to send reset email',
+        );
+      }
+
+    } catch (e) {
+      _log('Forgot password error: $e', level: 'ERROR');
+
+      String errorMessage;
+      if (e.toString().contains('Network error')) {
+        errorMessage = 'Please check your internet connection and try again';
+      } else if (e.toString().contains('timeout')) {
+        errorMessage = 'Request timeout. Please try again';
+      } else {
+        errorMessage = 'Failed to send reset email. Please try again';
+      }
+
+      return AuthResult(
+        success: false,
+        message: errorMessage,
+      );
+    }
+  }
+
+  // Reset password with token
+  static Future<AuthResult> resetPassword({
+    required String token,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    try {
+      _log('Resetting password with token');
+
+      final response = await http.post(
+        Uri.parse('${ApiConstants.baseUrl}/auth/reset-password'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'token': token,
+          'password': password,
+          'password_confirmation': passwordConfirmation,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        return AuthResult(
+          success: true,
+          message: data['message'] ?? 'Password reset successfully',
+        );
+      } else {
+        return AuthResult(
+          success: false,
+          message: data['message'] ?? 'Failed to reset password',
+        );
+      }
+
+    } catch (e) {
+      _log('Reset password error: $e', level: 'ERROR');
+
+      String errorMessage;
+      if (e.toString().contains('Network error')) {
+        errorMessage = 'Please check your internet connection and try again';
+      } else if (e.toString().contains('timeout')) {
+        errorMessage = 'Request timeout. Please try again';
+      } else {
+        errorMessage = 'Failed to reset password. Please try again';
+      }
+
+      return AuthResult(
+        success: false,
+        message: errorMessage,
+      );
+    }
+  }
+
+  // Validate reset token
+  static Future<AuthResult> validateResetToken(String token) async {
+    try {
+      _log('Validating reset token');
+
+      final response = await http.get(
+        Uri.parse('${ApiConstants.baseUrl}/auth/validate-reset-token/$token'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        return AuthResult(
+          success: true,
+          message: data['message'] ?? 'Token is valid',
+          data: data['data'],
+        );
+      } else {
+        return AuthResult(
+          success: false,
+          message: data['message'] ?? 'Invalid or expired token',
+        );
+      }
+
+    } catch (e) {
+      _log('Token validation error: $e', level: 'ERROR');
+
+      String errorMessage;
+      if (e.toString().contains('Network error')) {
+        errorMessage = 'Please check your internet connection and try again';
+      } else if (e.toString().contains('timeout')) {
+        errorMessage = 'Request timeout. Please try again';
+      } else {
+        errorMessage = 'Failed to validate token. Please try again';
+      }
+
+      return AuthResult(
+        success: false,
+        message: errorMessage,
+      );
+    }
+  }
 }
 
 class AuthResult {
@@ -584,11 +734,13 @@ class AuthResult {
   final String message;
   final User? user;
   final String? token;
+  final Map<String, dynamic>? data;
 
   AuthResult({
     required this.success,
     required this.message,
     this.user,
     this.token,
+    this.data,
   });
 }
