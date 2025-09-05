@@ -28,7 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _acceptTerms = false;
-  UserRole _selectedRole = UserRole.client;
+  // Removed role selection - all registrations are client role
 
   @override
   void dispose() {
@@ -66,7 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
         phone: Validators.cleanPhoneNumber(_phoneController.text.trim()),
-        role: _selectedRole.value,
+        role: 'client', // Always register as client
       );
 
       if (result.success) {
@@ -80,8 +80,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           );
 
-          // Navigate to appropriate screen based on user role
-          _navigateBasedOnRole(result.user!.role);
+          // Navigate to home page after successful registration
+          Navigator.of(context).pushReplacementNamed('/home');
         }
       } else {
         if (mounted) {
@@ -113,25 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  void _navigateBasedOnRole(UserRole role) {
-    String routeName;
-    switch (role) {
-      case UserRole.client:
-        routeName = '/client-home';
-        break;
-      case UserRole.merchant:
-        routeName = '/merchant-home';
-        break;
-      case UserRole.accountant:
-        routeName = '/accountant-home';
-        break;
-      case UserRole.superAdmin:
-        routeName = '/admin-home';
-        break;
-    }
-
-    Navigator.of(context).pushReplacementNamed(routeName);
-  }
+  // Removed role-based navigation - all users go to home page
 
   void _navigateToLogin() {
     Navigator.of(context).pushReplacement(
@@ -208,61 +190,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   
                   const SizedBox(height: 32),
                   
-                  // Account Type Selection
-                  Text(
-                    'Account Type',
-                    style: AppTextStyles.label,
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.border),
-                      borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
-                    ),
-                    child: Column(
-                      children: [
-                        RadioListTile<UserRole>(
-                          title: Text(
-                            'Client',
-                            style: AppTextStyles.bodyMedium,
-                          ),
-                          subtitle: Text(
-                            'Order food from restaurants',
-                            style: AppTextStyles.bodySmall,
-                          ),
-                          value: UserRole.client,
-                          groupValue: _selectedRole,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedRole = value!;
-                            });
-                          },
-                          activeColor: AppColors.primary,
-                        ),
-                        const Divider(height: 1),
-                        RadioListTile<UserRole>(
-                          title: Text(
-                            'Merchant',
-                            style: AppTextStyles.bodyMedium,
-                          ),
-                          subtitle: Text(
-                            'Manage restaurant and menu',
-                            style: AppTextStyles.bodySmall,
-                          ),
-                          value: UserRole.merchant,
-                          groupValue: _selectedRole,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedRole = value!;
-                            });
-                          },
-                          activeColor: AppColors.primary,
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 24),
+                  // Removed account type selection - all registrations are client accounts
+
+                  const SizedBox(height: 16),
                   
                   // Full Name Field
                   CustomTextField(

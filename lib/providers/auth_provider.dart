@@ -14,9 +14,8 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  // User role getters
+  // User role getters (removed merchant role support)
   bool get isClient => _user?.role.isClient ?? false;
-  bool get isMerchant => _user?.role.isMerchant ?? false;
   bool get isAccountant => _user?.role.isAccountant ?? false;
   bool get isSuperAdmin => _user?.role.isSuperAdmin ?? false;
 

@@ -60,8 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
 
-          // Navigate to appropriate screen based on user role
-          _navigateBasedOnRole(result.user!.role);
+          // Navigate to home page after successful login
+          Navigator.of(context).pushReplacementNamed('/home');
         }
       } else {
         if (mounted) {
@@ -93,25 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _navigateBasedOnRole(UserRole role) {
-    String routeName;
-    switch (role) {
-      case UserRole.client:
-        routeName = '/client-home';
-        break;
-      case UserRole.merchant:
-        routeName = '/merchant-home';
-        break;
-      case UserRole.accountant:
-        routeName = '/accountant-home';
-        break;
-      case UserRole.superAdmin:
-        routeName = '/admin-home';
-        break;
-    }
-
-    Navigator.of(context).pushReplacementNamed(routeName);
-  }
+  // Removed role-based navigation - all users go to home page
 
   void _navigateToRegister() {
     Navigator.of(context).push(
