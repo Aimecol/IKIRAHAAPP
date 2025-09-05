@@ -78,8 +78,8 @@ try {
 
     echo "\n🎉 Database setup completed successfully!\n\n";
     echo "You can now access the API at:\n";
-    echo "- Health check: http://localhost/ikiraha-api/public/health\n";
-    echo "- API root: http://localhost/ikiraha-api/public/\n\n";
+    echo "- Health check: http://localhost/ikirahaapp/ikiraha-api/public/health\n";
+    echo "- API root: http://localhost/ikirahaapp/ikiraha-api/public/\n\n";
 
     echo "Default test accounts:\n";
     echo "- Super Admin: admin@ikiraha.com / password\n";
