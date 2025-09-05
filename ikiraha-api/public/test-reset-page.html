@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Password Reset Page - IKIRAHA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            color: #FF6B35;
+            margin-bottom: 30px;
+        }
+        .test-link {
+            background-color: #FF6B35;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .test-link:hover {
+            background-color: #e55a2b;
+        }
+        .info-box {
+            background-color: #e3f2fd;
+            border: 1px solid #bbdefb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .code {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍽️ IKIRAHA Password Reset Test Page</h1>
+            <p>Test the password reset functionality</p>
+        </div>
+
+        <div class="info-box">
+            <h3>📧 How to Test the Complete Flow:</h3>
+            <ol>
+                <li><strong>Send a password reset email:</strong> Use the API endpoint or run the test script</li>
+                <li><strong>Get the reset token:</strong> Check your email or database</li>
+                <li><strong>Test the reset page:</strong> Click the test link below with a valid token</li>
+                <li><strong>Reset password:</strong> Enter new password and confirm</li>
+            </ol>
+        </div>
+
+        <div class="warning-box">
+            <h3>⚠️ Important Notes:</h3>
+            <ul>
+                <li>You need a valid reset token from the database</li>
+                <li>Tokens expire after 1 hour</li>
+                <li>Each token can only be used once</li>
+                <li>The API endpoints must be running</li>
+            </ul>
+        </div>
+
+        <h3>🧪 Test Links:</h3>
+        
+        <p><strong>Test with Sample Token (will show invalid token error):</strong></p>
+        <a href="reset-password.html?token=sample-test-token-123" class="test-link" target="_blank">
+            Test Reset Page (Sample Token)
+        </a>
+
+        <p><strong>Test with Empty Token (will show no token error):</strong></p>
+        <a href="reset-password.html" class="test-link" target="_blank">
+            Test Reset Page (No Token)
+        </a>
+
+        <h3>📋 Manual Testing Steps:</h3>
+        
+        <div class="info-box">
+            <h4>Step 1: Generate a Real Reset Token</h4>
+            <p>Run this command in the ikiraha-api directory:</p>
+            <div class="code">php test_complete_flow.php</div>
+            <p>Or make an API call to:</p>
+            <div class="code">POST http://localhost/ikirahaapp/ikiraha-api/public/auth/forgot-password<br>
+            Body: {"email": "aimecol314@gmail.com"}</div>
+        </div>
+
+        <div class="info-box">
+            <h4>Step 2: Get the Token from Database</h4>
+            <p>Check the password_resets table for the latest token:</p>
+            <div class="code">SELECT token FROM password_resets WHERE email = 'aimecol314@gmail.com' AND used = 0 ORDER BY created_at DESC LIMIT 1;</div>
+        </div>
+
+        <div class="info-box">
+            <h4>Step 3: Test the Reset Page</h4>
+            <p>Use the token in this URL format:</p>
+            <div class="code">http://localhost/ikirahaapp/ikiraha-api/public/reset-password.html?token=YOUR_TOKEN_HERE</div>
+        </div>
+
+        <h3>🔍 What to Test:</h3>
+        <ul>
+            <li>✅ Page loads correctly with IKIRAHA branding</li>
+            <li>✅ Token validation works (valid/invalid/expired)</li>
+            <li>✅ Password strength indicator functions</li>
+            <li>✅ Password confirmation validation</li>
+            <li>✅ Form submission to API endpoint</li>
+            <li>✅ Success/error message display</li>
+            <li>✅ Redirect to login after success</li>
+            <li>✅ Mobile responsiveness</li>
+            <li>✅ Password visibility toggles</li>
+            <li>✅ Security information display</li>
+        </ul>
+
+        <h3>🚀 API Endpoints Being Used:</h3>
+        <ul>
+            <li><strong>Token Validation:</strong> GET /auth/validate-reset-token/{token}</li>
+            <li><strong>Password Reset:</strong> POST /auth/reset-password</li>
+        </ul>
+
+        <div class="warning-box">
+            <h3>🐛 Troubleshooting:</h3>
+            <ul>
+                <li><strong>CORS Issues:</strong> Make sure the API allows requests from localhost</li>
+                <li><strong>Network Errors:</strong> Check that Apache/PHP is running</li>
+                <li><strong>Invalid Token:</strong> Generate a fresh token from the database</li>
+                <li><strong>API Errors:</strong> Check the browser console for detailed error messages</li>
+            </ul>
+        </div>
+
+        <p style="text-align: center; margin-top: 30px;">
+            <a href="reset-password.html?token=test" class="test-link">
+                🧪 Open Reset Password Page
+            </a>
+        </p>
+    </div>
+
+    <script>
+        // Add some interactive functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🧪 IKIRAHA Password Reset Test Page Loaded');
+            console.log('📧 To test with a real token, check your email or database');
+            console.log('🔗 Reset page URL: reset-password.html?token=YOUR_TOKEN');
+        });
+    </script>
+</body>
+</html>

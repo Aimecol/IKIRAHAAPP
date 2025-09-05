@@ -159,9 +159,14 @@ class ForgotPasswordController
                 return;
             }
 
-            // Find reset token (search by hashed token)
-            $hashedToken = hash('sha256', $token);
-            $resetRecord = $this->passwordReset->findByToken($hashedToken);
+            // Find reset token - try both unhashed and hashed versions for compatibility
+            $resetRecord = $this->passwordReset->findByToken($token);
+
+            // If not found with unhashed token, try hashed version
+            if (!$resetRecord) {
+                $hashedToken = hash('sha256', $token);
+                $resetRecord = $this->passwordReset->findByToken($hashedToken);
+            }
 
             if (!$resetRecord) {
                 $this->sendError('Invalid or expired reset token', 400);
@@ -226,9 +231,14 @@ class ForgotPasswordController
                 return;
             }
 
-            // Find reset token
-            $hashedToken = hash('sha256', $token);
-            $resetRecord = $this->passwordReset->findByToken($hashedToken);
+            // Find reset token - try both unhashed and hashed versions for compatibility
+            $resetRecord = $this->passwordReset->findByToken($token);
+
+            // If not found with unhashed token, try hashed version
+            if (!$resetRecord) {
+                $hashedToken = hash('sha256', $token);
+                $resetRecord = $this->passwordReset->findByToken($hashedToken);
+            }
 
             if (!$resetRecord) {
                 $this->sendError('Invalid reset token', 400);
@@ -272,8 +282,8 @@ class ForgotPasswordController
      */
     private function generateResetLink($token)
     {
-        $baseUrl = 'http://localhost/ikirahaapp';
-        return $baseUrl . '/#/reset-password?token=' . urlencode($token);
+        $baseUrl = 'http://localhost/ikirahaapp/ikiraha-api/public';
+        return $baseUrl . '/reset-password.html?token=' . urlencode($token);
     }
 
     /**
