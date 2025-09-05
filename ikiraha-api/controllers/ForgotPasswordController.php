@@ -4,6 +4,12 @@
  * Handles password reset functionality with email verification
  */
 
+require_once '../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 class ForgotPasswordController
 {
     private $db;
@@ -305,13 +311,126 @@ class ForgotPasswordController
     }
 
     /**
-     * Send password reset email using simple mail function
+     * Send password reset email using PHPMailer with Gmail SMTP
      */
     private function sendPasswordResetEmail($toEmail, $userName, $resetLink)
     {
-        $subject = 'Reset Your IKIRAHA Password';
-        
-        $message = "
+        $mail = new PHPMailer(true);
+
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'aimecol314@gmail.com';
+            $mail->Password   = 'dpol bvhx ovmo tvrx';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            // Recipients
+            $mail->setFrom('aimecol314@gmail.com', 'IKIRAHA Food Delivery');
+            $mail->addAddress($toEmail, $userName);
+            $mail->addReplyTo('aimecol314@gmail.com', 'IKIRAHA Support');
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Reset Your IKIRAHA Password';
+
+            // HTML email template
+            $htmlMessage = $this->getPasswordResetEmailTemplate($userName, $resetLink);
+            $mail->Body = $htmlMessage;
+
+            // Plain text alternative
+            $plainMessage = $this->getPasswordResetEmailPlainText($userName, $resetLink);
+            $mail->AltBody = $plainMessage;
+
+            // Additional headers to prevent spam
+            $mail->addCustomHeader('X-Mailer', 'IKIRAHA Password Reset System');
+            $mail->addCustomHeader('X-Priority', '1');
+            $mail->addCustomHeader('X-MSMail-Priority', 'High');
+            $mail->addCustomHeader('Importance', 'High');
+
+            $mail->send();
+            return true;
+
+        } catch (Exception $e) {
+            // Log the error for debugging
+            error_log("Password reset email failed: {$mail->ErrorInfo}");
+
+            // Fallback to simple mail function
+            return $this->sendPasswordResetEmailFallback($toEmail, $userName, $resetLink);
+        }
+    }
+
+    /**
+     * Get HTML email template for password reset
+     */
+    private function getPasswordResetEmailTemplate($userName, $resetLink)
+    {
+        return "
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>Reset Your IKIRAHA Password</title>
+            <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background-color: #FF6B35; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+                .content { background-color: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+                .button { display: inline-block; background-color: #FF6B35; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+                .security-info { background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0; }
+                .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='header'>
+                <h1>🍽️ IKIRAHA</h1>
+                <p>Password Reset Request</p>
+            </div>
+            <div class='content'>
+                <h2>Hello $userName,</h2>
+                <p>We received a request to reset your IKIRAHA account password. If you made this request, click the button below to reset your password:</p>
+
+                <div style='text-align: center;'>
+                    <a href='$resetLink' class='button'>Reset My Password</a>
+                </div>
+
+                <p>Or copy and paste this link into your browser:</p>
+                <p style='word-break: break-all; background-color: #f0f0f0; padding: 10px; border-radius: 3px;'>$resetLink</p>
+
+                <div class='security-info'>
+                    <h3>🔒 Important Security Information:</h3>
+                    <ul>
+                        <li>This link will expire in <strong>1 hour</strong></li>
+                        <li>This link can only be used <strong>once</strong></li>
+                        <li>If you didn't request this reset, please ignore this email</li>
+                        <li>Never share this link with anyone</li>
+                    </ul>
+                </div>
+
+                <p>If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.</p>
+
+                <p>Best regards,<br>
+                <strong>The IKIRAHA Team</strong></p>
+            </div>
+            <div class='footer'>
+                <p>This is an automated message from IKIRAHA Food Delivery.</p>
+                <p>© " . date('Y') . " IKIRAHA. All rights reserved.</p>
+                <p>Need help? Contact us at aimecol314@gmail.com</p>
+            </div>
+        </body>
+        </html>";
+    }
+
+    /**
+     * Get plain text email template for password reset
+     */
+    private function getPasswordResetEmailPlainText($userName, $resetLink)
+    {
+        return "
+IKIRAHA - Password Reset Request
+
 Hello $userName,
 
 We received a request to reset your IKIRAHA account password. If you made this request, click the link below to reset your password:
@@ -332,11 +451,24 @@ The IKIRAHA Team
 ---
 This is an automated message from IKIRAHA Food Delivery.
 © " . date('Y') . " IKIRAHA. All rights reserved.
+Need help? Contact us at aimecol314@gmail.com
         ";
+    }
 
-        $headers = "From: IKIRAHA <noreply@ikiraha.com>\r\n";
-        $headers .= "Reply-To: support@ikiraha.com\r\n";
+    /**
+     * Fallback email method using simple mail function
+     */
+    private function sendPasswordResetEmailFallback($toEmail, $userName, $resetLink)
+    {
+        $subject = 'Reset Your IKIRAHA Password';
+
+        $message = $this->getPasswordResetEmailPlainText($userName, $resetLink);
+
+        $headers = "From: IKIRAHA <aimecol314@gmail.com>\r\n";
+        $headers .= "Reply-To: aimecol314@gmail.com\r\n";
         $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+        $headers .= "X-Mailer: IKIRAHA Password Reset System\r\n";
+        $headers .= "X-Priority: 1\r\n";
 
         return mail($toEmail, $subject, $message, $headers);
     }
