@@ -55,16 +55,26 @@ try {
     $database = new Database();
     $conn = $database->getConnection();
 
-    // Verify tables exist
-    $tables = ['users', 'restaurants', 'categories', 'products', 'orders', 'order_items', 'transactions'];
+    // Verify all tables exist
+    $tables = [
+        'users', 'user_addresses', 'restaurants', 'categories', 'products',
+        'orders', 'order_items', 'transactions', 'user_favorites',
+        'auth_tokens', 'notifications'
+    ];
+
+    $missingTables = [];
     foreach ($tables as $table) {
         $stmt = $conn->query("SHOW TABLES LIKE '$table'");
         if ($stmt->rowCount() === 0) {
-            throw new Exception("Table '$table' was not created");
+            $missingTables[] = $table;
         }
     }
 
-    echo "✓ All tables verified\n";
+    if (!empty($missingTables)) {
+        throw new Exception("Missing tables: " . implode(', ', $missingTables));
+    }
+
+    echo "✓ All " . count($tables) . " tables verified\n";
 
     // Check if sample data exists
     $stmt = $conn->query("SELECT COUNT(*) as count FROM users");
@@ -76,16 +86,94 @@ try {
         echo "⚠ No sample data found. Sample data should be inserted via schema.sql\n";
     }
 
-    echo "\n🎉 Database setup completed successfully!\n\n";
-    echo "You can now access the API at:\n";
-    echo "- Health check: http://localhost/ikirahaapp/ikiraha-api/public/health\n";
-    echo "- API root: http://localhost/ikirahaapp/ikiraha-api/public/\n\n";
+    // Verify API configuration
+    echo "✓ Verifying API configuration...\n";
 
-    echo "Default test accounts:\n";
-    echo "- Super Admin: admin@ikiraha.com / password\n";
-    echo "- Merchant: merchant@ikiraha.com / password\n";
-    echo "- Accountant: accountant@ikiraha.com / password\n";
-    echo "- Client: client@ikiraha.com / password\n\n";
+    // Check required directories
+    $directories = [
+        __DIR__ . '/logs',
+        __DIR__ . '/uploads',
+        __DIR__ . '/config',
+        __DIR__ . '/models',
+        __DIR__ . '/controllers'
+    ];
+
+    foreach ($directories as $dir) {
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+            echo "  ✓ Created directory: " . basename($dir) . "\n";
+        } else {
+            echo "  ✓ Directory exists: " . basename($dir) . "\n";
+        }
+    }
+
+    // Check file permissions
+    if (!is_writable(__DIR__ . '/logs')) {
+        echo "  ⚠ Warning: logs directory is not writable\n";
+    }
+
+    if (!is_writable(__DIR__ . '/uploads')) {
+        echo "  ⚠ Warning: uploads directory is not writable\n";
+    }
+
+    // Test API endpoints
+    echo "✓ Testing API endpoints...\n";
+
+    $baseUrl = 'http://localhost/ikirahaapp/ikiraha-api/public';
+    $testEndpoints = [
+        '/' => 'API Root',
+        '/health' => 'Health Check'
+    ];
+
+    foreach ($testEndpoints as $endpoint => $name) {
+        $url = $baseUrl . $endpoint;
+        $context = stream_context_create([
+            'http' => [
+                'timeout' => 5,
+                'ignore_errors' => true
+            ]
+        ]);
+
+        $response = @file_get_contents($url, false, $context);
+        if ($response !== false) {
+            echo "  ✓ $name endpoint accessible\n";
+        } else {
+            echo "  ⚠ Warning: $name endpoint not accessible at $url\n";
+        }
+    }
+
+    echo "\n🎉 Database and API setup completed successfully!\n\n";
+
+    echo "📍 API Access Points:\n";
+    echo "- Health check: http://localhost/ikirahaapp/ikiraha-api/public/health\n";
+    echo "- API root: http://localhost/ikirahaapp/ikiraha-api/public/\n";
+    echo "- API documentation: See API_DOCUMENTATION.md\n\n";
+
+    echo "👥 Default test accounts (password: 'password'):\n";
+    echo "- Super Admin: admin@ikiraha.com\n";
+    echo "- Merchant: merchant@ikiraha.com\n";
+    echo "- Accountant: accountant@ikiraha.com\n";
+    echo "- Client: client@ikiraha.com\n\n";
+
+    echo "📊 Database Statistics:\n";
+    $stats = [
+        'users' => 'SELECT COUNT(*) as count FROM users',
+        'restaurants' => 'SELECT COUNT(*) as count FROM restaurants',
+        'categories' => 'SELECT COUNT(*) as count FROM categories',
+        'products' => 'SELECT COUNT(*) as count FROM products'
+    ];
+
+    foreach ($stats as $table => $query) {
+        try {
+            $stmt = $conn->query($query);
+            $count = $stmt->fetch()['count'];
+            echo "- " . ucfirst($table) . ": $count records\n";
+        } catch (Exception $e) {
+            echo "- " . ucfirst($table) . ": Error getting count\n";
+        }
+    }
+
+    echo "\n🚀 Your IKIRAHA API is ready to use!\n";
 
 } catch (Exception $e) {
     echo "❌ Setup failed: " . $e->getMessage() . "\n";

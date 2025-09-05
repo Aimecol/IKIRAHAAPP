@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IKIRAHA API Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #2E7D32, #1B5E20);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        button {
+            background: #FF6F00;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #E65100;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .success {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid #4CAF50;
+        }
+        .error {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid #F44336;
+        }
+        .info {
+            background: rgba(33, 150, 243, 0.3);
+            border: 1px solid #2196F3;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ IKIRAHA API Connection Test</h1>
+        
+        <div class="test-section">
+            <h3>1. API Health Check</h3>
+            <p>Test if the IKIRAHA API backend is running and accessible.</p>
+            <button onclick="testHealthCheck()">Test Health Endpoint</button>
+            <div id="health-result" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>2. Authentication Test</h3>
+            <p>Test login with demo credentials.</p>
+            <input type="email" id="email" placeholder="Email" value="client@ikiraha.com">
+            <input type="password" id="password" placeholder="Password" value="password">
+            <button onclick="testLogin()">Test Login</button>
+            <div id="login-result" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>3. Network Configuration</h3>
+            <p>Current API configuration:</p>
+            <div id="config-info" class="result info">
+API Base URL: http://localhost/ikirahaapp/ikiraha-api/public
+Health Endpoint: /health
+Login Endpoint: /auth/login
+Register Endpoint: /auth/register
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>4. Troubleshooting Tips</h3>
+            <div class="result info">
+✅ Ensure XAMPP is running (Apache + MySQL)
+✅ Check if http://localhost/ikirahaapp/ikiraha-api/public/health works
+✅ Verify database connection in IKIRAHA API
+✅ Check browser console for CORS errors
+✅ Disable antivirus/firewall temporarily if needed
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost/ikirahaapp/ikiraha-api/public';
+
+        function showResult(elementId, content, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.textContent = content;
+            element.className = `result ${type}`;
+            element.style.display = 'block';
+        }
+
+        async function testHealthCheck() {
+            showResult('health-result', 'Testing health endpoint...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('health-result', 
+                        `✅ SUCCESS!\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`, 
+                        'success'
+                    );
+                } else {
+                    showResult('health-result', 
+                        `❌ FAILED!\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`, 
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showResult('health-result', 
+                    `❌ ERROR!\n\nError: ${error.message}\n\nPossible causes:\n- XAMPP not running\n- Apache server not started\n- API not accessible\n- CORS issues\n- Network connectivity problems`, 
+                    'error'
+                );
+            }
+        }
+
+        async function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                showResult('login-result', '❌ Please enter email and password', 'error');
+                return;
+            }
+
+            showResult('login-result', 'Testing login...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                    }),
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showResult('login-result', 
+                        `✅ LOGIN SUCCESS!\n\nStatus: ${response.status}\nMessage: ${data.message}\nUser: ${data.data.user.name} (${data.data.user.email})\nRole: ${data.data.user.role}\nToken: ${data.data.access_token.substring(0, 50)}...`, 
+                        'success'
+                    );
+                } else {
+                    showResult('login-result', 
+                        `❌ LOGIN FAILED!\n\nStatus: ${response.status}\nMessage: ${data.message || 'Unknown error'}\nResponse: ${JSON.stringify(data, null, 2)}`, 
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showResult('login-result', 
+                    `❌ LOGIN ERROR!\n\nError: ${error.message}\n\nPossible causes:\n- API server not running\n- Database connection issues\n- Invalid credentials\n- Network problems\n- CORS configuration`, 
+                    'error'
+                );
+            }
+        }
+
+        // Auto-test health check on page load
+        window.addEventListener('load', () => {
+            setTimeout(testHealthCheck, 1000);
+        });
+    </script>
+</body>
+</html>

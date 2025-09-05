@@ -144,9 +144,58 @@ $router->addRoute('PUT', '/orders/{id}/status', 'OrderController', 'updateOrderS
 $router->addRoute('GET', '/orders/all', 'OrderController', 'getAllOrders');
 $router->addRoute('GET', '/restaurants/{id}/orders', 'OrderController', 'getRestaurantOrders');
 
-// Restaurant routes (will be implemented if needed)
-// $router->addRoute('GET', '/restaurants', 'RestaurantController', 'getAllRestaurants');
-// $router->addRoute('GET', '/restaurants/{id}', 'RestaurantController', 'getRestaurantById');
+// Restaurant routes
+$router->addRoute('GET', '/restaurants', 'RestaurantController', 'getAllRestaurants');
+$router->addRoute('GET', '/restaurants/{id}', 'RestaurantController', 'getRestaurantById');
+$router->addRoute('POST', '/restaurants', 'RestaurantController', 'createRestaurant');
+$router->addRoute('PUT', '/restaurants/{id}', 'RestaurantController', 'updateRestaurant');
+$router->addRoute('DELETE', '/restaurants/{id}', 'RestaurantController', 'deleteRestaurant');
+$router->addRoute('GET', '/restaurants/merchant/{id}', 'RestaurantController', 'getRestaurantsByMerchant');
+$router->addRoute('GET', '/my-restaurants', 'RestaurantController', 'getMyRestaurants');
+
+// Category routes (enhanced)
+$router->addRoute('POST', '/categories', 'CategoryController', 'createCategory');
+$router->addRoute('PUT', '/categories/{id}', 'CategoryController', 'updateCategory');
+$router->addRoute('DELETE', '/categories/{id}', 'CategoryController', 'deleteCategory');
+$router->addRoute('GET', '/categories/{id}', 'CategoryController', 'getCategoryById');
+$router->addRoute('GET', '/categories/with-count', 'CategoryController', 'getCategoriesWithProductCount');
+
+// User Address routes
+$router->addRoute('GET', '/addresses', 'UserAddressController', 'getUserAddresses');
+$router->addRoute('GET', '/addresses/{id}', 'UserAddressController', 'getAddressById');
+$router->addRoute('POST', '/addresses', 'UserAddressController', 'createAddress');
+$router->addRoute('PUT', '/addresses/{id}', 'UserAddressController', 'updateAddress');
+$router->addRoute('DELETE', '/addresses/{id}', 'UserAddressController', 'deleteAddress');
+$router->addRoute('PUT', '/addresses/{id}/default', 'UserAddressController', 'setDefaultAddress');
+$router->addRoute('GET', '/addresses/default', 'UserAddressController', 'getDefaultAddress');
+
+// Transaction routes
+$router->addRoute('GET', '/transactions', 'TransactionController', 'getAllTransactions');
+$router->addRoute('GET', '/transactions/{id}', 'TransactionController', 'getTransactionById');
+$router->addRoute('GET', '/transactions/order/{id}', 'TransactionController', 'getTransactionsByOrder');
+$router->addRoute('POST', '/transactions', 'TransactionController', 'createTransaction');
+$router->addRoute('PUT', '/transactions/{id}/status', 'TransactionController', 'updateTransactionStatus');
+$router->addRoute('GET', '/transactions/stats', 'TransactionController', 'getTransactionStats');
+
+// Notification routes
+$router->addRoute('GET', '/notifications', 'NotificationController', 'getUserNotifications');
+$router->addRoute('POST', '/notifications', 'NotificationController', 'createNotification');
+$router->addRoute('POST', '/notifications/bulk', 'NotificationController', 'createBulkNotifications');
+$router->addRoute('PUT', '/notifications/{id}/read', 'NotificationController', 'markAsRead');
+$router->addRoute('PUT', '/notifications/read-all', 'NotificationController', 'markAllAsRead');
+$router->addRoute('DELETE', '/notifications/{id}', 'NotificationController', 'deleteNotification');
+$router->addRoute('GET', '/notifications/unread-count', 'NotificationController', 'getUnreadCount');
+$router->addRoute('DELETE', '/notifications/old', 'NotificationController', 'clearOldNotifications');
+
+// Favorite routes
+$router->addRoute('GET', '/favorites', 'FavoriteController', 'getUserFavorites');
+$router->addRoute('POST', '/favorites', 'FavoriteController', 'addToFavorites');
+$router->addRoute('DELETE', '/favorites/{id}', 'FavoriteController', 'removeFromFavorites');
+$router->addRoute('PUT', '/favorites/{id}/toggle', 'FavoriteController', 'toggleFavorite');
+$router->addRoute('GET', '/favorites/{id}/status', 'FavoriteController', 'isFavorite');
+$router->addRoute('GET', '/favorites/count', 'FavoriteController', 'getFavoriteCount');
+$router->addRoute('GET', '/favorites/popular', 'FavoriteController', 'getMostFavoritedProducts');
+$router->addRoute('DELETE', '/favorites/clear', 'FavoriteController', 'clearUserFavorites');
 
 // Dispatch the request
 try {
