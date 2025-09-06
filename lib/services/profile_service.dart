@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_model.dart';
 import '../config/environment.dart';
 import '../utils/api_constants.dart';
+import 'auth_service.dart';
 
 class ProfileService {
   static const String _tag = 'ProfileService';
@@ -19,16 +20,31 @@ class ProfileService {
     try {
       _log('Fetching user profile...');
 
+      // Check if user is authenticated first
+      final isAuthenticated = await AuthService.isAuthenticated();
+      _log('User authentication status: $isAuthenticated');
+
+      if (!isAuthenticated) {
+        _log('ERROR: User is not authenticated');
+        return ProfileResult(
+          success: false,
+          message: 'User not authenticated',
+        );
+      }
+
       final token = await _getAccessToken();
       if (token == null) {
+        _log('ERROR: No access token found in storage');
         return ProfileResult(
           success: false,
           message: 'No access token found',
         );
       }
 
+      _log('Token found, making API request...');
+
       final response = await http.get(
-        Uri.parse('${Environment.instance.getApiEndpoint('/auth/profile')}'),
+        Uri.parse('${Environment.instance.getApiEndpoint('/auth/user-profile')}'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -36,6 +52,45 @@ class ProfileService {
       );
 
       _log('Profile API response: ${response.statusCode}');
+
+      // If token is expired (401), try to refresh it
+      if (response.statusCode == 401) {
+        _log('Token appears to be expired, attempting to refresh...');
+        final refreshResult = await AuthService.refreshToken();
+
+        if (refreshResult.success && refreshResult.token != null) {
+          _log('Token refreshed successfully, retrying profile request...');
+
+          // Retry the request with the new token
+          final retryResponse = await http.get(
+            Uri.parse('${Environment.instance.getApiEndpoint('/auth/profile')}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ${refreshResult.token}',
+            },
+          );
+
+          _log('Retry profile API response: ${retryResponse.statusCode}');
+
+          if (retryResponse.statusCode == 200) {
+            final retryData = jsonDecode(retryResponse.body);
+            if (retryData['success'] == true) {
+              final user = User.fromJson(retryData['data']['user']);
+              return ProfileResult(
+                success: true,
+                message: 'Profile fetched successfully',
+                user: user,
+              );
+            }
+          }
+        }
+
+        // If refresh failed or retry failed, return authentication error
+        return ProfileResult(
+          success: false,
+          message: 'Authentication expired. Please log in again.',
+        );
+      }
 
       final data = jsonDecode(response.body);
 
@@ -294,13 +349,40 @@ class ProfileService {
     }
   }
 
-  /// Get access token from storage
+  /// Get access token from storage using AuthService
   static Future<String?> _getAccessToken() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getString('access_token');
+      _log('Getting access token from AuthService...');
+      final token = await AuthService.getToken();
+      _log('Token retrieval result: ${token != null ? 'Found' : 'Not found'}');
+
+      if (token != null) {
+        _log('Token length: ${token.length}');
+        _log('Token starts with: ${token.substring(0, token.length > 20 ? 20 : token.length)}...');
+      }
+
+      return token;
     } catch (e) {
       _log('Error getting access token: $e');
+      return null;
+    }
+  }
+
+  /// Handle token refresh when API returns 401
+  static Future<String?> _handleTokenRefresh() async {
+    try {
+      _log('Token appears to be expired, attempting to refresh...');
+      final refreshResult = await AuthService.refreshToken();
+
+      if (refreshResult.success && refreshResult.token != null) {
+        _log('Token refreshed successfully');
+        return refreshResult.token;
+      } else {
+        _log('Token refresh failed: ${refreshResult.message}');
+        return null;
+      }
+    } catch (e) {
+      _log('Error during token refresh: $e');
       return null;
     }
   }

@@ -31,6 +31,13 @@ class Router {
             'controller' => $controller,
             'action' => $action
         ];
+        // Debug: Log route registration
+        error_log("Route registered: $method $pattern -> $controller::$action");
+
+        // Also log to a separate debug file for easier viewing
+        file_put_contents(__DIR__ . '/../logs/routes_debug.log',
+            date('Y-m-d H:i:s') . " Route registered: $method $pattern -> $controller::$action\n",
+            FILE_APPEND | LOCK_EX);
     }
 
     public function dispatch() {
@@ -66,6 +73,11 @@ class Router {
 
             // Debug: Log route matching
             error_log("Checking route: " . $route['pattern'] . " against " . $requestUri . " with pattern " . $pattern);
+
+            // Additional debug for user-profile route
+            if (strpos($route['pattern'], 'user-profile') !== false) {
+                error_log("FOUND USER-PROFILE ROUTE: Method={$route['method']}, Pattern={$route['pattern']}, RequestMethod=$requestMethod, RequestUri=$requestUri");
+            }
 
             if (preg_match($pattern, $requestUri, $matches)) {
                 array_shift($matches); // Remove full match
@@ -122,8 +134,11 @@ $router->addRoute('POST', '/auth/logout', 'AuthController', 'logout');
 $router->addRoute('POST', '/auth/refresh', 'AuthController', 'refreshToken');
 $router->addRoute('PUT', '/auth/change-password', 'AuthController', 'changePassword');
 
+// Test route
+$router->addRoute('GET', '/test-get', 'HealthController', 'health');
+
 // Profile routes
-$router->addRoute('GET', '/auth/profile', 'ProfileController', 'getProfile');
+$router->addRoute('GET', '/auth/user-profile', 'ProfileController', 'getProfile');
 $router->addRoute('PUT', '/auth/profile', 'ProfileController', 'updateProfile');
 $router->addRoute('POST', '/auth/profile/upload-picture', 'ProfileController', 'uploadProfilePicture');
 $router->addRoute('DELETE', '/auth/profile/delete-picture', 'ProfileController', 'deleteProfilePicture');
