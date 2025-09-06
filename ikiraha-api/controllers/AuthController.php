@@ -102,16 +102,32 @@ class AuthController {
      */
     public function refreshToken() {
         try {
-            // Get POST data
-            $data = json_decode(file_get_contents("php://input"), true);
+            // Try to get refresh token from Authorization header first
+            $refreshToken = null;
+            $headers = getallheaders();
 
-            if (!$data || !isset($data['refresh_token'])) {
+            if (isset($headers['Authorization'])) {
+                $authHeader = $headers['Authorization'];
+                if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+                    $refreshToken = $matches[1];
+                }
+            }
+
+            // If not in header, try POST data (for backward compatibility)
+            if (!$refreshToken) {
+                $data = json_decode(file_get_contents("php://input"), true);
+                if ($data && isset($data['refresh_token'])) {
+                    $refreshToken = $data['refresh_token'];
+                }
+            }
+
+            if (!$refreshToken) {
                 $this->sendError('Refresh token is required', 400);
                 return;
             }
 
             // Validate refresh token
-            $decoded = JWT::validateToken($data['refresh_token']);
+            $decoded = JWT::validateToken($refreshToken);
 
             if ($decoded['type'] !== 'refresh') {
                 $this->sendError('Invalid token type', 400);
@@ -126,12 +142,14 @@ class AuthController {
                 return;
             }
 
-            // Generate new access token
+            // Generate new access token and refresh token
             $accessToken = JWT::generateAccessToken($userData['id'], $userData['role'], $userData['email']);
+            $newRefreshToken = JWT::generateRefreshToken($userData['id']);
 
             $this->sendSuccess([
                 'message' => 'Token refreshed successfully',
                 'access_token' => $accessToken,
+                'refresh_token' => $newRefreshToken,
                 'expires_in' => JWT_EXPIRY
             ]);
 

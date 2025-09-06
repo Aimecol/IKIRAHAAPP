@@ -23,8 +23,21 @@ class ProfileController {
      */
     public function getProfile() {
         try {
+            // Log the request for debugging
+            error_log("[ProfileController] getProfile() called at " . date('Y-m-d H:i:s'));
+            error_log("[ProfileController] Request method: " . $_SERVER['REQUEST_METHOD']);
+            error_log("[ProfileController] Request URI: " . $_SERVER['REQUEST_URI']);
+
+            $headers = getallheaders();
+            if (isset($headers['Authorization'])) {
+                error_log("[ProfileController] Authorization header: " . substr($headers['Authorization'], 0, 50) . "...");
+            } else {
+                error_log("[ProfileController] No Authorization header found");
+            }
+
             // Authenticate user
             if (!AuthMiddleware::authenticate()) {
+                error_log("[ProfileController] Authentication failed");
                 return;
             }
 

@@ -43,8 +43,11 @@ class ProfileService {
 
       _log('Token found, making API request...');
 
+      final url = Environment.instance.getApiEndpoint('/auth/user-profile');
+      _log('Profile API URL: $url');
+
       final response = await http.get(
-        Uri.parse('${Environment.instance.getApiEndpoint('/auth/user-profile')}'),
+        Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -52,6 +55,7 @@ class ProfileService {
       );
 
       _log('Profile API response: ${response.statusCode}');
+      _log('Profile API response body: ${response.body}');
 
       // If token is expired (401), try to refresh it
       if (response.statusCode == 401) {
