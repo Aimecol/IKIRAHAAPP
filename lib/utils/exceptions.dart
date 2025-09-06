@@ -1,4 +1,5 @@
 // Custom exceptions for the IKIRAHA app
+import 'dart:convert';
 
 class AppException implements Exception {
   final String message;

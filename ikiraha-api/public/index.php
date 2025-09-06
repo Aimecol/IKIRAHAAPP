@@ -120,9 +120,13 @@ $router->addRoute('POST', '/auth/register', 'AuthController', 'register');
 $router->addRoute('POST', '/auth/login', 'AuthController', 'login');
 $router->addRoute('POST', '/auth/logout', 'AuthController', 'logout');
 $router->addRoute('POST', '/auth/refresh', 'AuthController', 'refreshToken');
-$router->addRoute('GET', '/auth/profile', 'AuthController', 'getProfile');
-$router->addRoute('PUT', '/auth/profile', 'AuthController', 'updateProfile');
-$router->addRoute('POST', '/auth/change-password', 'AuthController', 'changePassword');
+$router->addRoute('PUT', '/auth/change-password', 'AuthController', 'changePassword');
+
+// Profile routes
+$router->addRoute('GET', '/auth/profile', 'ProfileController', 'getProfile');
+$router->addRoute('PUT', '/auth/profile', 'ProfileController', 'updateProfile');
+$router->addRoute('POST', '/auth/profile/upload-picture', 'ProfileController', 'uploadProfilePicture');
+$router->addRoute('DELETE', '/auth/profile/delete-picture', 'ProfileController', 'deleteProfilePicture');
 
 // Password reset routes
 $router->addRoute('POST', '/auth/forgot-password', 'ForgotPasswordController', 'forgotPassword');
@@ -215,4 +219,3 @@ try {
         'timestamp' => date('Y-m-d H:i:s')
     ]);
 }
-?>

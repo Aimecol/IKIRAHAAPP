@@ -139,7 +139,7 @@ class User {
      */
     public function updateProfile($userId, $data) {
         try {
-            $allowedFields = ['name', 'phone', 'profile_image'];
+            $allowedFields = ['name', 'phone', 'profile_image', 'address', 'date_of_birth', 'gender', 'bio'];
             $updateFields = [];
             $params = [':id' => $userId];
 
@@ -165,7 +165,7 @@ class User {
             }
 
             if ($stmt->execute()) {
-                return $this->getUserById($userId);
+                return $this->findById($userId);
             }
 
             throw new Exception('Profile update failed');
@@ -199,15 +199,15 @@ class User {
             }
         }
 
-        if (!validateEmail($data['email'])) {
+        if (!$this->validateEmail($data['email'])) {
             return false;
         }
 
-        if (strlen($data['password']) < PASSWORD_MIN_LENGTH) {
+        if (strlen($data['password']) < 6) { // PASSWORD_MIN_LENGTH
             return false;
         }
 
-        if (isset($data['phone']) && !empty($data['phone']) && !validatePhone($data['phone'])) {
+        if (isset($data['phone']) && !empty($data['phone']) && !$this->validatePhone($data['phone'])) {
             return false;
         }
 
@@ -340,7 +340,8 @@ class User {
      */
     public function findById($id) {
         try {
-            $query = "SELECT id, uuid, email, name, phone, role, status, email_verified, created_at
+            $query = "SELECT id, uuid, email, name, phone, role, status, email_verified, profile_image,
+                            address, date_of_birth, gender, bio, created_at, updated_at
                      FROM " . $this->table_name . "
                      WHERE id = :id";
 
@@ -376,5 +377,55 @@ class User {
             return false;
         }
     }
+
+    /**
+     * Validate email format
+     */
+    private function validateEmail($email) {
+        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+    }
+
+    /**
+     * Validate phone number format
+     */
+    private function validatePhone($phone) {
+        // Basic phone validation - adjust regex as needed
+        return preg_match('/^\+?[\d\s\-\(\)]+$/', $phone);
+    }
 }
-?>
+
+// Helper functions
+if (!function_exists('generateUUID')) {
+    function generateUUID() {
+        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
+    }
+}
+
+if (!function_exists('logError')) {
+    function logError($message, $context = []) {
+        error_log($message . ' Context: ' . json_encode($context));
+    }
+}
+
+// Constants
+if (!defined('PASSWORD_HASH_ALGO')) {
+    define('PASSWORD_HASH_ALGO', PASSWORD_DEFAULT);
+}
+
+if (!defined('PASSWORD_MIN_LENGTH')) {
+    define('PASSWORD_MIN_LENGTH', 6);
+}
+
+if (!defined('JWT_EXPIRY')) {
+    define('JWT_EXPIRY', 3600); // 1 hour
+}
+
+if (!defined('JWT_REFRESH_EXPIRY')) {
+    define('JWT_REFRESH_EXPIRY', 604800); // 1 week
+}

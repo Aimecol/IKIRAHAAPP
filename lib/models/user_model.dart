@@ -8,6 +8,10 @@ class User {
   final UserStatus status;
   final bool emailVerified;
   final String? profileImage;
+  final String? address;
+  final String? dateOfBirth;
+  final String? gender;
+  final String? bio;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -21,6 +25,10 @@ class User {
     required this.status,
     required this.emailVerified,
     this.profileImage,
+    this.address,
+    this.dateOfBirth,
+    this.gender,
+    this.bio,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -36,6 +44,10 @@ class User {
       status: UserStatus.fromString(json['status'] ?? 'active'),
       emailVerified: json['email_verified'] == 1 || json['email_verified'] == true,
       profileImage: json['profile_image'],
+      address: json['address'],
+      dateOfBirth: json['date_of_birth'],
+      gender: json['gender'],
+      bio: json['bio'],
       createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(json['updated_at'] ?? '') ?? DateTime.now(),
     );
@@ -52,6 +64,10 @@ class User {
       'status': status.value,
       'email_verified': emailVerified,
       'profile_image': profileImage,
+      'address': address,
+      'date_of_birth': dateOfBirth,
+      'gender': gender,
+      'bio': bio,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -67,6 +83,10 @@ class User {
     UserStatus? status,
     bool? emailVerified,
     String? profileImage,
+    String? address,
+    String? dateOfBirth,
+    String? gender,
+    String? bio,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -80,6 +100,10 @@ class User {
       status: status ?? this.status,
       emailVerified: emailVerified ?? this.emailVerified,
       profileImage: profileImage ?? this.profileImage,
+      address: address ?? this.address,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      gender: gender ?? this.gender,
+      bio: bio ?? this.bio,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

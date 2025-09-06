@@ -299,4 +299,3 @@ class AuthController {
         return isset($errorCodes[$statusCode]) ? $errorCodes[$statusCode] : 'UNKNOWN_ERROR';
     }
 }
-?>
